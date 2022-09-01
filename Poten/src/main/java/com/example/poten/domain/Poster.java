@@ -1,6 +1,8 @@
 package com.example.poten.domain;
 
 import com.sun.istack.NotNull;
+import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -15,6 +17,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Getter
+@Setter
 @Table(name="poster")
 public class Poster extends BaseTimeEntity {
 

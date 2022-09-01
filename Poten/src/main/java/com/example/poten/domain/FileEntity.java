@@ -1,6 +1,9 @@
 package com.example.poten.domain;
 
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class FileEntity {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
@@ -28,7 +34,4 @@ public class FileEntity {
         this.fileSize = fileSize;
     }
 
-    public FileEntity() {
-
-    }
 }

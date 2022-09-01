@@ -1,14 +1,21 @@
 package com.example.poten.domain;
 
 import com.sun.istack.NotNull;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Getter
+@Setter
 public class Board extends BaseTimeEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -23,10 +30,10 @@ public class Board extends BaseTimeEntity {
 
     private String content;
 
-    @OneToMany(mappedBy = "boards", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Heart> like;
 
-    @OneToMany(mappedBy = "boards", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Comment> comment;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})

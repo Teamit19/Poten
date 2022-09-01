@@ -1,14 +1,21 @@
 package com.example.poten.domain;
 
 import com.sun.istack.NotNull;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Getter
+@Setter
 public class Club extends BaseTimeEntity{
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -44,6 +51,4 @@ public class Club extends BaseTimeEntity{
     @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<User> waiting;
 
-    public Club() {
-    }
 }
