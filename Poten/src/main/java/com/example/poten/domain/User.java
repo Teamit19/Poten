@@ -6,7 +6,6 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
@@ -36,11 +35,17 @@ public class User {
     @OneToMany
     private List<FileEntity> profile;
 
-    @OneToMany(mappedBy = "clubs", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private List<Club> clubList;
-
-
-
-
-
+    @Builder
+    public User(Long id, String email, String password, String name, String nickname, Integer sex, String birth, String phone, String school, List<FileEntity> profile) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.nickname = nickname;
+        this.sex = sex;
+        this.birth = birth;
+        this.phone = phone;
+        this.school = school;
+        this.profile = profile;
+    }
 }

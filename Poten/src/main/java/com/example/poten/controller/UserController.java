@@ -14,10 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/users")
 public class UserController {
 
-    @ApiOperation(value = "회원가입")
-    @PostMapping("/signup")
-    public void signUp(@RequestBody SignUpForm signUpForm) {
-        log.info("회원가입 버튼 눌림");
+//    @ApiOperation(value = "회원가입")
+//    @PostMapping("/signup")
+//    public void signUp(@RequestBody SignUpForm signUpForm) {
+//        log.info("회원가입 버튼 눌림");
+//
+//    }
 
-    }
 }
