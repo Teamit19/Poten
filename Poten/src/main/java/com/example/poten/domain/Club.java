@@ -2,16 +2,18 @@ package com.example.poten.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 
 @Entity
-public class Club {
+public class Club extends BaseTimeEntity{
 
     @Id
     private Long id;
 
     private String name;
 
-    private String password;
+    @JoinColumn(name="managerId")
+    private User user;
 
     private String desc;
 
