@@ -1,16 +1,23 @@
 package com.example.poten.domain;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
 import java.util.List;
 
+@Entity
 public class Board extends BaseTimeEntity {
 
     @Id
     private Long id;
 
+    @ManyToOne
+    @NotNull
     @JoinColumn(name="userId")
     private User user;
 
+    @ManyToOne
+    @NotNull
     @JoinColumn(name="clubId")
     private Club club;
 

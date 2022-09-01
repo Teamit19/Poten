@@ -6,6 +6,9 @@ import java.util.List;
 @Entity
 public class User {
 
+    public User() {
+    }
+
     @Id
     private Long id;
 
@@ -30,6 +33,9 @@ public class User {
 
     @OneToMany(mappedBy = "clubs", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Club> clubList;
+
+
+
 
 
 }

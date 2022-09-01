@@ -1,8 +1,9 @@
 package com.example.poten.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import com.sun.istack.NotNull;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Club extends BaseTimeEntity{
@@ -12,6 +13,8 @@ public class Club extends BaseTimeEntity{
 
     private String name;
 
+    @ManyToOne
+    @NotNull
     @JoinColumn(name="managerId")
     private User user;
 
@@ -21,11 +24,26 @@ public class Club extends BaseTimeEntity{
 
     private Integer field;
 
-    private String member;
+    private Integer activityType;
 
-    private String waiting;
+    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Follow> follows;
 
-    private String board;
+    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Heart> hearts;
 
-    private String like;
+    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Board> boards;
+
+    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Poster> posters;
+
+    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<User> members;
+
+    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<User> waiting;
+
+    public Club() {
+    }
 }

@@ -16,7 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="poster")
-public class Poster {
+public class Poster extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
