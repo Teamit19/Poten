@@ -11,21 +11,21 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Getter
-@Setter
+@Table(name="clubs")
 public class Club extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+       private String name;
 
     @ManyToOne
     @NotNull
     @JoinColumn(name="managerId")
     private User user;
 
-    private String desc;
+    private String clubDesc;
 
     private String region;
 
@@ -33,11 +33,11 @@ public class Club extends BaseTimeEntity{
 
     private Integer activityType;
 
-    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<Follow> follows;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<User> follows;
 
-    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<Heart> hearts;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<User> hearts;
 
     @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Board> boards;
@@ -45,10 +45,19 @@ public class Club extends BaseTimeEntity{
     @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Poster> posters;
 
-    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<User> members;
 
-    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<User> waiting;
 
+
+    /**
+     * 피드 (게시물) 로직
+     * 
+     */
+    // 새 게시물 업로드
+    public void addBoard(Board board) {
+        boards.add(board);
+    }
 }

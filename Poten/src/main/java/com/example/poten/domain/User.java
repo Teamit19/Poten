@@ -36,10 +36,8 @@ public class User {
     @OneToMany
     private List<FileEntity> profile;
 
-    @OneToMany(mappedBy = "clubs", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private List<Club> clubList;
-
-
+//    @OneToMany(mappedBy = "clubs", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+//    private List<Club> clubList;
 
 
 

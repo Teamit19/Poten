@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Getter
-@Setter
+@Table(name="board")
 public class Board extends BaseTimeEntity {
 
     @Id
@@ -30,13 +30,24 @@ public class Board extends BaseTimeEntity {
 
     private String content;
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<Heart> like;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<User> like;
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Comment> comment;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<FileEntity> pics;
 
+    @Builder
+    public Board(User user, Club club, String content,
+        List<User> like, List<Comment> comment,
+        List<FileEntity> pics) {
+        this.user = user;
+        this.club = club;
+        this.content = content;
+        this.like = like;
+        this.comment = comment;
+        this.pics = pics;
+    }
 }
