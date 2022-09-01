@@ -12,7 +12,6 @@ import javax.persistence.Id;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class FileEntity {
     @Id

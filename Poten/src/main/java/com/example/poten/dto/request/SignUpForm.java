@@ -1,4 +1,4 @@
-package com.example.poten.dto;
+package com.example.poten.dto.request;
 
 import com.example.poten.domain.User;
 import lombok.AllArgsConstructor;

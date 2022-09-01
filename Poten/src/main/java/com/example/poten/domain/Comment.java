@@ -10,7 +10,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @Getter
-@Setter
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

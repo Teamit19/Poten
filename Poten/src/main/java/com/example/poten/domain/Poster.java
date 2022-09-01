@@ -21,7 +21,6 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Builder
 @Getter
-@Setter
 @Table(name="poster")
 public class Poster extends BaseTimeEntity {
 
