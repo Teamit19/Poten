@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Builder
 @Getter
 public class SaveBoardForm {
@@ -19,6 +18,15 @@ public class SaveBoardForm {
     private String content;
 
     private List<FileEntity> pics;
+
+    public SaveBoardForm(String content) {
+        this.content = content;
+    }
+
+    public SaveBoardForm(String content, List<FileEntity> pics) {
+        this.content = content;
+        this.pics = pics;
+    }
 
     public Board toBoard(User writer, Club club){
         return Board.builder()

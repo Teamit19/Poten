@@ -1,5 +1,6 @@
 package com.example.poten.domain;
 
+import com.example.poten.dto.request.SaveBoardForm;
 import com.sun.istack.NotNull;
 import lombok.*;
 
@@ -31,7 +32,7 @@ public class Board extends BaseTimeEntity {
     private String content;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<User> like;
+    private List<User> hearts;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Comment> comment;
@@ -41,13 +42,34 @@ public class Board extends BaseTimeEntity {
 
     @Builder
     public Board(User user, Club club, String content,
-        List<User> like, List<Comment> comment,
+        List<User> hearts, List<Comment> comment,
         List<FileEntity> pics) {
         this.user = user;
         this.club = club;
         this.content = content;
-        this.like = like;
+        this.hearts = hearts;
         this.comment = comment;
         this.pics = pics;
     }
+
+    // 피드 글 수정하기
+    public void update(SaveBoardForm form) {
+        this.content = form.getContent();
+        this.pics = form.getPics();
+    }
+
+    // 피드 좋아요 누르기
+    public boolean addLike(User user){
+        hearts.add(user);
+        return true;
+    }
+
+    // 피드 좋아요 취소하기
+//    public boolean deleteLike(User user){
+//        hearts.add(user);
+//        return true;
+//    }
+
+    // 피드 댓글 달기
+
 }

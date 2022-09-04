@@ -1,13 +1,13 @@
 package com.example.poten.domain;
 
 import com.sun.istack.NotNull;
+import java.util.ArrayList;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
@@ -18,7 +18,7 @@ public class Club extends BaseTimeEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-       private String name;
+   private String name;
 
     @ManyToOne
     @NotNull
@@ -51,6 +51,34 @@ public class Club extends BaseTimeEntity{
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<User> waiting;
 
+    @Builder
+    public Club(Long id, String name, User user, String clubDesc, String region,
+        Integer field, Integer activityType, List<User> follows,
+        List<User> hearts, List<Board> boards, List<Poster> posters,
+        List<User> members, List<User> waiting) {
+     this.id = id;
+     this.name = name;
+     this.user = user;
+     this.clubDesc = clubDesc;
+     this.region = region;
+     this.field = field;
+     this.activityType = activityType;
+     this.follows = new ArrayList<User>();
+     this.hearts = new ArrayList<User>();
+     this.boards = new ArrayList<Board>();
+     this.posters = new ArrayList<Poster>();
+     this.members = new ArrayList<User>();
+     this.waiting = new ArrayList<User>();
+    }
+   /**
+    * 동아리 멤버 로직
+    *
+    */
+    // 동아리 회원 추가
+    public long addMember(User user){
+       members.add(user);
+       return user.getId();
+    }
 
     /**
      * 피드 (게시물) 로직

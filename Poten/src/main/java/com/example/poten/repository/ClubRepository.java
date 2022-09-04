@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClubRepository  extends JpaRepository<Club, Long> {
 
-//    List<Club> findAllByMembers(User user);
+    List<Club> findAllByMembers(User user);
 }
 
