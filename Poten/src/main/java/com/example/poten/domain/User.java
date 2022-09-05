@@ -3,11 +3,9 @@ package com.example.poten.domain;
 import com.example.poten.dto.request.SignUpForm;
 import com.example.poten.dto.response.UserResponse;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -41,7 +39,7 @@ public class User implements UserDetails {
 
 
     @OneToMany
-    private List<FileEntity> profile;
+    private FileEntity profile;
 
     public User socialUser(String email, String password) {
         return User.builder()
@@ -117,4 +115,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
+
 }

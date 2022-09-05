@@ -1,6 +1,12 @@
 package com.example.poten.domain;
 
+import com.example.poten.dto.request.BoardForm;
+import com.example.poten.dto.response.BoardResponse;
+import com.example.poten.dto.response.CommentResponse;
+import com.example.poten.dto.response.HeartBoardResponse;
+import com.example.poten.dto.response.HeartClubResponse;
 import com.sun.istack.NotNull;
+import java.util.ArrayList;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,10 +36,10 @@ public class Board extends BaseTimeEntity {
 
     private String content;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<User> like;
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<HeartBoard> hearts;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> comment;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
@@ -41,13 +47,41 @@ public class Board extends BaseTimeEntity {
 
     @Builder
     public Board(User user, Club club, String content,
-        List<User> like, List<Comment> comment,
+        List<HeartBoard> hearts, List<Comment> comment,
         List<FileEntity> pics) {
         this.user = user;
         this.club = club;
         this.content = content;
-        this.like = like;
+        this.hearts = hearts;
         this.comment = comment;
         this.pics = pics;
     }
+
+    /* Entity -> DTO */
+    public BoardResponse toResponse(){
+        // 리스트 형식인 필드를  DTO로 변환
+        List<HeartBoardResponse> heartsResponses = new ArrayList<>();
+        hearts.forEach(h -> heartsResponses.add(h.toResponse()));
+
+        List<CommentResponse> commentResponses = new ArrayList<>();
+        comment.forEach(h -> commentResponses.add(h.toResponse()));
+
+        return BoardResponse.builder()
+            .boardId(id)
+            .writer(user.toResponse())
+            .club(club.toResponse())
+            .content(content)
+            .hearts(heartsResponses)
+            .comment(commentResponses)
+            .createdTime(getCreatedTime().toString())
+            .modifiedTime(getModifiedTime().toString())
+            .build();
+    }
+
+    // 피드 글 수정하기
+    public void update(BoardForm form) {
+        this.content = form.getContent();
+        this.pics = form.getPics();
+    }
+
 }

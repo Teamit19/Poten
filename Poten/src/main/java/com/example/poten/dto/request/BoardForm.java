@@ -10,16 +10,27 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Builder
 @Getter
-public class SaveBoardForm {
+public class BoardForm {
+
+    private Long clubId;
 
     @NotEmpty
     private String content;
 
     private List<FileEntity> pics;
 
+    public BoardForm(String content) {
+        this.content = content;
+    }
+
+    public BoardForm(String content, List<FileEntity> pics) {
+        this.content = content;
+        this.pics = pics;
+    }
+
+    /* DTO -> Entity */
     public Board toBoard(User writer, Club club){
         return Board.builder()
                     .user(writer)

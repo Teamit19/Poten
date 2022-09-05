@@ -1,5 +1,6 @@
 package com.example.poten.domain;
 
+import com.example.poten.dto.response.PosterResponse;
 import com.sun.istack.NotNull;
 import lombok.*;
 
@@ -46,4 +47,16 @@ public class Poster extends BaseTimeEntity {
     private List<FileEntity> posterImg;
 
 
+    public PosterResponse toResponse() {
+        return PosterResponse.builder()
+            .posterId(id)
+            .club(club.toResponse())
+            .writer(user.toResponse())
+            .title(title)
+            .content(content)
+            .deadlineDate(deadlineDate.toString())
+            .createdTime(getCreatedTime().toString())
+            .modifiedTime(getModifiedTime().toString())
+            .build();
+    }
 }
