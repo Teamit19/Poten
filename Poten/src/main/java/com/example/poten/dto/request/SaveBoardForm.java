@@ -28,6 +28,7 @@ public class SaveBoardForm {
         this.pics = pics;
     }
 
+    /* DTO -> Entity */
     public Board toBoard(User writer, Club club){
         return Board.builder()
                     .user(writer)

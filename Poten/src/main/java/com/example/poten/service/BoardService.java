@@ -2,14 +2,17 @@ package com.example.poten.service;
 
 import com.example.poten.domain.Board;
 import com.example.poten.domain.Club;
+import com.example.poten.domain.Comment;
 import com.example.poten.domain.User;
-import com.example.poten.dto.request.HeartDto;
+import com.example.poten.dto.request.CommentForm;
 import com.example.poten.dto.request.SaveBoardForm;
 import com.example.poten.exception.BoardException;
 import com.example.poten.exception.ClubException;
+import com.example.poten.exception.CommentException;
 import com.example.poten.exception.UserException;
 import com.example.poten.repository.BoardRepository;
 import com.example.poten.repository.ClubRepository;
+import com.example.poten.repository.CommentRepository;
 import com.example.poten.repository.UserRepository;
 import java.util.Collections;
 import java.util.List;
@@ -26,11 +29,13 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final ClubRepository clubRepository;
+    private final CommentRepository commentRepository;
 
-    public BoardService(BoardRepository boardRepository, UserRepository userRepository,  ClubRepository clubRepository) {
+    public BoardService(BoardRepository boardRepository, UserRepository userRepository,  ClubRepository clubRepository, CommentRepository commentRepository) {
         this.boardRepository = boardRepository;
         this.userRepository = userRepository;
         this.clubRepository = clubRepository;
+        this.commentRepository = commentRepository;
     }
 
     /**
@@ -102,34 +107,49 @@ public class BoardService {
     }
 
     /**
-     * 좋아요 누르기
-     */
-    public boolean heartBoard(User loginUser, HeartDto heartDto){
-        Board findBoardFromRepo = boardRepository.findById(heartDto.getTargetId()).orElseThrow(() -> new BoardException("존재하지 않는 피드입니다."));
-
-        // 이미 좋아요 누른 유저인지 확인
-        if (boardRepository.findByIdAndHearts(findBoardFromRepo, loginUser).isPresent()) throw new BoardException("이미 좋아요 누른 피드입니다.");
-
-        findBoardFromRepo.addLike(loginUser);
-        return true;
-    }
-
-    /**
-     * 좋아요 취소하기
-     */
-    public boolean unHeartBoard(User loginUser, HeartDto heartDto){
-        Board findBoardFromRepo = boardRepository.findById(heartDto.getTargetId()).orElseThrow(() -> new BoardException("존재하지 않는 피드입니다."));
-
-        // 이미 좋아요 누른 유저인지 확인
-        if (! boardRepository.findByIdAndHearts(findBoardFromRepo, loginUser).isPresent()) throw new BoardException("좋아요 하지 않은 피드입니다.");
-
-//        findBoardFromRepo.updateLike(loginUser);
-        return true;
-    }
-
-    /**
      * 댓글 달기
      */
+    public Comment saveComment(User loginUser, Long boardId, Long commentId,CommentForm form){
+        User findFromRepoUser = userRepository.findById(loginUser.getId()).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
 
+        Board findBoardFromRepo = boardRepository.findById(boardId).orElseThrow(() -> new BoardException("존재하지 않는 피드입니다."));
+
+        Comment comment  = Comment.builder()
+            .user(findFromRepoUser)
+            .board(findBoardFromRepo)
+            .content(form.getContent())
+            .build();
+
+        commentRepository.save(comment);
+        return comment;
+    }
+
+    /**
+     * 댓글 수정
+     */
+    public Comment updateComment(User loginUser, Long commentId, CommentForm form){
+        User findFromRepoUser = userRepository.findById(loginUser.getId()).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
+        Long findUserId = findFromRepoUser.getId();
+        Comment findCommentFromRepo = commentRepository.findById(commentId).orElseThrow(() -> new CommentException("존재하지 않는 댓글입니다."));
+
+        if(! findUserId.equals(findCommentFromRepo.getUser().getId())) throw new CommentException("해당 유저는 댓글 작성자가 아닙니다.");
+
+        findCommentFromRepo.update(form);
+        return findCommentFromRepo ;
+    }
+
+    /**
+     * 댓글 삭제
+     */
+    public boolean deleteComment(User loginUser, Long commentId){
+        User findFromRepoUser = userRepository.findById(loginUser.getId()).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
+        Long findUserId = findFromRepoUser.getId();
+        Comment findCommentFromRepo = commentRepository.findById(commentId).orElseThrow(() -> new CommentException("존재하지 않는 댓글입니다."));
+
+        if(! findUserId.equals(findCommentFromRepo.getUser().getId())) throw new CommentException("해당 유저는 댓글 작성자가 아닙니다.");
+
+        commentRepository.delete(findCommentFromRepo);
+        return true;
+    }
 
 }

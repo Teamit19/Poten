@@ -31,10 +31,10 @@ public class Board extends BaseTimeEntity {
 
     private String content;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<User> hearts;
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<HeartBoard> hearts;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> comment;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
@@ -42,7 +42,7 @@ public class Board extends BaseTimeEntity {
 
     @Builder
     public Board(User user, Club club, String content,
-        List<User> hearts, List<Comment> comment,
+        List<HeartBoard> hearts, List<Comment> comment,
         List<FileEntity> pics) {
         this.user = user;
         this.club = club;
@@ -57,19 +57,5 @@ public class Board extends BaseTimeEntity {
         this.content = form.getContent();
         this.pics = form.getPics();
     }
-
-    // 피드 좋아요 누르기
-    public boolean addLike(User user){
-        hearts.add(user);
-        return true;
-    }
-
-    // 피드 좋아요 취소하기
-//    public boolean deleteLike(User user){
-//        hearts.add(user);
-//        return true;
-//    }
-
-    // 피드 댓글 달기
 
 }

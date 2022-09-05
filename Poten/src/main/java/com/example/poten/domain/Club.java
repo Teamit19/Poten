@@ -36,8 +36,8 @@ public class Club extends BaseTimeEntity{
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<User> follows;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<User> hearts;
+    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<HeartClub> hearts;
 
     @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Board> boards;
@@ -54,7 +54,7 @@ public class Club extends BaseTimeEntity{
     @Builder
     public Club(Long id, String name, User user, String clubDesc, String region,
         Integer field, Integer activityType, List<User> follows,
-        List<User> hearts, List<Board> boards, List<Poster> posters,
+        List<HeartClub> hearts, List<Board> boards, List<Poster> posters,
         List<User> members, List<User> waiting) {
      this.id = id;
      this.name = name;
@@ -64,15 +64,15 @@ public class Club extends BaseTimeEntity{
      this.field = field;
      this.activityType = activityType;
      this.follows = new ArrayList<User>();
-     this.hearts = new ArrayList<User>();
+     this.hearts = new ArrayList<HeartClub>();
      this.boards = new ArrayList<Board>();
      this.posters = new ArrayList<Poster>();
      this.members = new ArrayList<User>();
      this.waiting = new ArrayList<User>();
     }
+
    /**
     * 동아리 멤버 로직
-    *
     */
     // 동아리 회원 추가
     public long addMember(User user){
@@ -82,7 +82,6 @@ public class Club extends BaseTimeEntity{
 
     /**
      * 피드 (게시물) 로직
-     * 
      */
     // 새 게시물 업로드
     public void addBoard(Board board) {
