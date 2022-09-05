@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
-public class User implements UserDetails {
+public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +38,7 @@ public class User implements UserDetails {
     private String role;
 
 
-    @OneToMany
+    @OneToOne
     private FileEntity profile;
 
     public User socialUser(String email, String password) {
@@ -72,7 +72,7 @@ public class User implements UserDetails {
     }
 
     @Builder
-    public User(Long id, String email, String password, String name, String nickname, Integer sex, String birth, String phone, String school, List<FileEntity> profile) {
+    public User(Long id, String email, String password, String name, String nickname, Integer sex, String birth, String phone, String school, FileEntity profile) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -86,34 +86,5 @@ public class User implements UserDetails {
         this.profile = profile;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.name;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
-    }
 
 }
