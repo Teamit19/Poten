@@ -17,7 +17,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.OAS_30)
                 .useDefaultResponseMessages(false)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.velog.eunjy.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.example.poten.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());
