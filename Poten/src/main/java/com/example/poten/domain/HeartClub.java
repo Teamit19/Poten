@@ -1,5 +1,6 @@
 package com.example.poten.domain;
 
+import com.example.poten.dto.response.HeartClubResponse;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,5 +35,13 @@ public class HeartClub {
         this.id = id;
         this.user = user;
         this.club = club;
+    }
+
+    public HeartClubResponse toResponse() {
+        return HeartClubResponse.builder()
+            .heartId(id)
+            .lover(user.toResponse())
+            .club(club.toResponse())
+            .build();
     }
 }

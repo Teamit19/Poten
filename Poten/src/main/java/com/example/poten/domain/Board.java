@@ -1,7 +1,12 @@
 package com.example.poten.domain;
 
-import com.example.poten.dto.request.SaveBoardForm;
+import com.example.poten.dto.request.BoardForm;
+import com.example.poten.dto.response.BoardResponse;
+import com.example.poten.dto.response.CommentResponse;
+import com.example.poten.dto.response.HeartBoardResponse;
+import com.example.poten.dto.response.HeartClubResponse;
 import com.sun.istack.NotNull;
+import java.util.ArrayList;
 import lombok.*;
 
 import javax.persistence.*;
@@ -52,8 +57,29 @@ public class Board extends BaseTimeEntity {
         this.pics = pics;
     }
 
+    /* Entity -> DTO */
+    public BoardResponse toResponse(){
+        // 리스트 형식인 필드를  DTO로 변환
+        List<HeartBoardResponse> heartsResponses = new ArrayList<>();
+        hearts.forEach(h -> heartsResponses.add(h.toResponse()));
+
+        List<CommentResponse> commentResponses = new ArrayList<>();
+        comment.forEach(h -> commentResponses.add(h.toResponse()));
+
+        return BoardResponse.builder()
+            .boardId(id)
+            .writer(user.toResponse())
+            .club(club.toResponse())
+            .content(content)
+            .hearts(heartsResponses)
+            .comment(commentResponses)
+            .createdTime(getCreatedTime().toString())
+            .modifiedTime(getModifiedTime().toString())
+            .build();
+    }
+
     // 피드 글 수정하기
-    public void update(SaveBoardForm form) {
+    public void update(BoardForm form) {
         this.content = form.getContent();
         this.pics = form.getPics();
     }

@@ -1,7 +1,7 @@
 package com.example.poten.domain;
 
 import com.example.poten.dto.request.CommentForm;
-import com.example.poten.dto.request.SaveBoardForm;
+import com.example.poten.dto.response.CommentResponse;
 import com.sun.istack.NotNull;
 import lombok.*;
 
@@ -40,5 +40,16 @@ public class Comment extends BaseTimeEntity {
     // 피드 글 수정하기
     public void update(CommentForm form) {
         this.content = form.getContent();
+    }
+
+    public CommentResponse toResponse() {
+        return CommentResponse.builder()
+            .commentId(id)
+            .writer(user.toResponse())
+            .board(board.toResponse())
+            .content(content)
+            .createdTime(getCreatedTime().toString())
+            .modifiedTime(getModifiedTime().toString())
+            .build();
     }
 }

@@ -5,7 +5,7 @@ import com.example.poten.domain.Club;
 import com.example.poten.domain.Comment;
 import com.example.poten.domain.User;
 import com.example.poten.dto.request.CommentForm;
-import com.example.poten.dto.request.SaveBoardForm;
+import com.example.poten.dto.request.BoardForm;
 import com.example.poten.exception.BoardException;
 import com.example.poten.exception.ClubException;
 import com.example.poten.exception.CommentException;
@@ -41,7 +41,7 @@ public class BoardService {
     /**
      * 피드 업로드
      */
-    public Board saveBoard(User loginUser, Club userClub, SaveBoardForm form){
+    public Board saveBoard(User loginUser, Club userClub, BoardForm form){
         /**
          * 검증 0 : 해당 유저가 있는지 확인
          * 검증 1 : 해당 유저가 동아리 소속이 맞는지 확인
@@ -80,7 +80,7 @@ public class BoardService {
     /**
      * 피드 수정
      */
-    public Board updateBoard(User loginUser, Long boardId, SaveBoardForm form){
+    public Board updateBoard(User loginUser, Long boardId, BoardForm form){
         User findUserFromRepo = userRepository.findById(loginUser.getId()).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
         Long findUserId = findUserFromRepo.getId();
         Board findBoardFromRepo = boardRepository.findById(boardId).orElseThrow(() -> new BoardException("존재하지 않는 피드입니다."));

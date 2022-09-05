@@ -12,18 +12,20 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class SaveBoardForm {
+public class BoardForm {
+
+    private Long clubId;
 
     @NotEmpty
     private String content;
 
     private List<FileEntity> pics;
 
-    public SaveBoardForm(String content) {
+    public BoardForm(String content) {
         this.content = content;
     }
 
-    public SaveBoardForm(String content, List<FileEntity> pics) {
+    public BoardForm(String content, List<FileEntity> pics) {
         this.content = content;
         this.pics = pics;
     }

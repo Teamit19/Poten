@@ -1,5 +1,6 @@
 package com.example.poten.domain;
 
+import com.example.poten.dto.response.UserResponse;
 import lombok.*;
 
 import javax.persistence.*;
@@ -32,7 +33,7 @@ public class User {
     private String school;
 
     @OneToMany
-    private List<FileEntity> profile;
+    private FileEntity profile;
 
     @Builder
     public User(Long id, String email, String password, String name, String nickname, Integer sex, String birth, String phone, String school, List<FileEntity> profile) {
@@ -46,5 +47,19 @@ public class User {
         this.phone = phone;
         this.school = school;
         this.profile = profile;
+    }
+
+    /* Entity -> DTO */
+    public UserResponse toResponse(){
+        return UserResponse.builder()
+            .memberId(id)
+            .email(email)
+            .name(name)
+            .nickname(nickname)
+            .sex(sex)
+            .birth(birth)
+            .phone(phone)
+            .school(school)
+            .build();
     }
 }
