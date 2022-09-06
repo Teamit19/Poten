@@ -125,8 +125,7 @@ public class BoardController {
 
     @ApiOperation(value = "피드 삭제")
     @DeleteMapping("/delete/{boardId}")
-    public ResponseEntity deleteBoard(HttpServletRequest request, @PathVariable Long boardId, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) throws LoginException {
-
+    public ResponseEntity deleteBoard(HttpServletRequest request, @PathVariable Long boardId) throws LoginException {
         User loginUser = userService.getLoginUser(request);
         boolean deleteResult =  boardService.deleteBoard(loginUser, boardId);
         return ResponseEntity.ok(new BoolResponse(deleteResult));
