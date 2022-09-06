@@ -2,11 +2,17 @@ package com.example.poten.controller;
 
 import com.example.poten.domain.Board;
 import com.example.poten.domain.Club;
+import com.example.poten.domain.Comment;
+import com.example.poten.domain.HeartBoard;
 import com.example.poten.domain.User;
 import com.example.poten.dto.request.BoardForm;
 import com.example.poten.dto.request.BoolResponse;
+import com.example.poten.dto.request.CommentForm;
+import com.example.poten.dto.request.HeartForm;
 import com.example.poten.dto.response.BoardResponse;
 import com.example.poten.dto.response.BoardResponseList;
+import com.example.poten.dto.response.CommentResponse;
+import com.example.poten.dto.response.CommentResponseList;
 import com.example.poten.service.BoardService;
 import com.example.poten.service.ClubService;
 import com.example.poten.service.UserService;
@@ -52,7 +58,7 @@ public class BoardController {
      */
     @ApiOperation(value = "피드 생성")
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadBoard(HttpServletRequest request, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) {
+    public ResponseEntity<?> saveBoard(HttpServletRequest request, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             logError(fieldErrors);
@@ -65,13 +71,36 @@ public class BoardController {
         return ResponseEntity.ok(savedBoard.toResponse());
     }
 
+    @ApiOperation(value = "피드 하나 조회")
+    @GetMapping("/{boardId}")
+    public ResponseEntity<?> getBoard(HttpServletRequest request, @PathVariable Long boardId) {
+        User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
+
+        Board findBoard = boardService.findBoardByBoardId(boardId);
+        return ResponseEntity.ok(findBoard.toResponse());
+    }
+
     @ApiOperation(value = "동아리별 피드 조회")
     @GetMapping("/club/{clubId}")
-    public ResponseEntity<?> getBoard(HttpServletRequest request, @PathVariable Long clubId) {
+    public ResponseEntity<?> getBoardByClub(HttpServletRequest request, @PathVariable Long clubId) {
         User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
 
         Club club = clubService.findByClubId(clubId); // <<TODO>> clubId로 club 객체 불러오기
-        List<Board> boardEntityList = boardService.findByClubId(club);
+        List<Board> boardEntityList = boardService.findBoardByClubId(club);
+
+        // DTO로 변환
+        List<BoardResponse> boardResponseList = new ArrayList<>();
+        boardEntityList.forEach(b -> boardResponseList.add(b.toResponse()));
+
+        return ResponseEntity.ok(new BoardResponseList(boardResponseList));
+    }
+
+    @ApiOperation(value = "내가 쓴 피드 모두 조회")
+    @GetMapping("/mypage/boards")
+    public ResponseEntity<?> getBoardByUser(HttpServletRequest request) {
+        User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
+
+        List<Board> boardEntityList = boardService.findBoardByMemberId(loginUser);
 
         // DTO로 변환
         List<BoardResponse> boardResponseList = new ArrayList<>();
@@ -96,15 +125,109 @@ public class BoardController {
 
     @ApiOperation(value = "피드 삭제")
     @DeleteMapping("/delete/{boardId}")
-    public ResponseEntity deleteBoard(HttpServletRequest request,  @PathVariable Long boardId, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) {
+    public ResponseEntity deleteBoard(HttpServletRequest request, @PathVariable Long boardId, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) {
 
         User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
         boolean deleteResult =  boardService.deleteBoard(loginUser, boardId);
         return ResponseEntity.ok(new BoolResponse(deleteResult));
     }
 
+    @ApiOperation(value = "피드 좋아요")
+    @PostMapping("/{boardId}/heart")
+    public ResponseEntity heartBoard(HttpServletRequest request, @PathVariable Long boardId) {
+        User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
+
+        HeartBoard savedBoard =  boardService.heartBoard(loginUser, boardId);
+        return ResponseEntity.ok(savedBoard.toResponse());
+    }
+
+    @ApiOperation(value = "피드 좋아요 해제")
+    @PostMapping("/{boardId}/unheart")
+    public ResponseEntity unHeartBoard(HttpServletRequest request, @PathVariable Long boardId, BindingResult bindingResult) {
+        User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
+
+        boolean unHeartResult =  boardService.unHeartBoard(loginUser, boardId);
+        return ResponseEntity.ok(new BoolResponse(unHeartResult));
+    }
+
+
     /**
      * 댓글
      */
+    @ApiOperation(value = "댓글 달기")
+    @PostMapping("/{boardId}/comments")
+    public ResponseEntity<?> saveComment(HttpServletRequest request, @PathVariable Long boardId, @Valid @RequestBody CommentForm commentForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+            logError(fieldErrors);
+            new ResponseEntity<>(fieldErrors, HttpStatus.BAD_REQUEST);
+        }
+
+        User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
+
+        Comment savedcomment = boardService.saveComment(loginUser, boardId, commentForm);
+        return ResponseEntity.ok(savedcomment.toResponse());
+    }
+
+//    // <<TODO>>  필요성 검토
+//    @ApiOperation(value = "댓글 하나 조회")
+//    @PostMapping("/comments/{commentId}")
+//    public ResponseEntity<?> getComment(HttpServletRequest request, @PathVariable Long commentId) {
+//        User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
+//
+//        Comment findComment = boardService.findCommentByCommentId(commentId);
+//        return ResponseEntity.ok(findComment.toResponse());
+//    }
+
+    @ApiOperation(value = "피드의 댓글들 조회")
+    @GetMapping("/{boardId}/comments/")
+    public ResponseEntity<?> getCommentByBoard(HttpServletRequest request, @PathVariable Long boardId) {
+        User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
+
+        List<Comment> findCommentList = boardService.findCommentByBoardId(boardId);
+
+        // DTO로 변환
+        List<CommentResponse> commentResponseList = new ArrayList<>();
+        findCommentList.forEach(c -> commentResponseList.add(c.toResponse()));
+
+        return ResponseEntity.ok(new CommentResponseList(commentResponseList));
+    }
+
+    @ApiOperation(value = "내가 쓴 댓글 모두 조회")
+    @GetMapping("/mypage/comments")
+    public ResponseEntity<?> getCommentByUser(HttpServletRequest request) {
+        User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
+
+        List<Comment> findCommentList = boardService.findCommentByMember(loginUser);
+
+        // DTO로 변환
+        List<CommentResponse> commentResponseList = new ArrayList<>();
+        findCommentList.forEach(c -> commentResponseList.add(c.toResponse()));
+
+        return ResponseEntity.ok(new CommentResponseList(commentResponseList));
+    }
+
+    @ApiOperation(value = "댓글 수정")
+    @PutMapping("/comments/{commentId}")
+    public ResponseEntity<?> updateComment(HttpServletRequest request, @PathVariable Long commentId, @Valid @RequestBody CommentForm commentForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+            logError(fieldErrors);
+            new ResponseEntity<>(fieldErrors, HttpStatus.BAD_REQUEST);
+        }
+
+        User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
+        Comment updateComment = boardService.updateComment(loginUser, commentId, commentForm);
+        return ResponseEntity.ok(updateComment.toResponse());
+    }
+
+    @ApiOperation(value = "댓글 삭제")
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity deleteComment(HttpServletRequest request, @PathVariable Long commentId, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) {
+
+        User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
+        boolean deleteResult =  boardService.deleteComment(loginUser, commentId);
+        return ResponseEntity.ok(new BoolResponse(deleteResult));
+    }
 
 }

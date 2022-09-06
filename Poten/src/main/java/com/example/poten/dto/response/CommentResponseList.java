@@ -8,7 +8,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class BoardResponseList {
-
-    private List<BoardResponse> boardResponseList;
+public class CommentResponseList {
+    public List<CommentResponse> CommentResponseList;
 }
