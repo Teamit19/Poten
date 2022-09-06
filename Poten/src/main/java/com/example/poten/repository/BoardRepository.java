@@ -12,5 +12,4 @@ import org.springframework.stereotype.Repository;
 public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findAllByUser(User user);
     List<Board> findAllByClub(Club club);
-//    Optional<Board> findByIdAndHearts(Board board, User user);
 }

@@ -76,7 +76,7 @@ public class BoardController {
     public ResponseEntity<?> getBoard(HttpServletRequest request, @PathVariable Long boardId) throws LoginException {
         User loginUser = userService.getLoginUser(request);
 
-        Board findBoard = boardService.findBoardByBoardId(boardId);
+        Board findBoard = boardService.findBoardById(boardId);
         return ResponseEntity.ok(findBoard.toResponse());
     }
 

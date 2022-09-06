@@ -13,9 +13,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Getter
 @Table(name="board")
 public class Board extends BaseTimeEntity {
@@ -46,9 +44,10 @@ public class Board extends BaseTimeEntity {
     private List<FileEntity> pics;
 
     @Builder
-    public Board(User user, Club club, String content,
+    public Board(Long id, User user, Club club, String content,
         List<HeartBoard> hearts, List<Comment> comment,
         List<FileEntity> pics) {
+        this.id = id;
         this.user = user;
         this.club = club;
         this.content = content;

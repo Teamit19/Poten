@@ -1,0 +1,99 @@
+package com.example.poten.service;
+
+import com.example.poten.domain.Club;
+import com.example.poten.domain.Poster;
+import com.example.poten.domain.User;
+import com.example.poten.dto.request.PosterForm;
+import com.example.poten.exception.ClubException;
+import com.example.poten.exception.PosterException;
+import com.example.poten.exception.UserException;
+import com.example.poten.repository.ClubRepository;
+import com.example.poten.repository.PosterRepository;
+import com.example.poten.repository.UserRepository;
+import java.util.Collections;
+import java.util.List;
+import javax.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Service
+@Slf4j
+@Transactional
+public class PosterService {
+    private final PosterRepository posterRepository;
+    private final UserRepository userRepository;
+    private final ClubRepository clubRepository;
+
+    public PosterService(PosterRepository posterRepository, UserRepository userRepository, ClubRepository clubRepository){
+        this.posterRepository = posterRepository;
+        this.userRepository = userRepository;
+        this.clubRepository = clubRepository;
+    }
+
+    /**
+     * 공고 업로드
+     */
+    public Poster savePoster(User loginUser, Club userClub, PosterForm form)
+    {
+        /**
+         * 검증 0 : 해당 유저가 있는지 확인
+         * 검증 1 : 해당 유저가 동아리 대표가 맞는지 확인
+         */
+        User findUserFromRepo = userRepository.findById(loginUser.getId()).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
+
+        Club findClubFromRepo = clubRepository.findByIdAndManager(userClub, findUserFromRepo).orElseThrow(() -> new ClubException("해당 유저는 동아리 대표가 아닙니다."));
+
+        Poster savedPoster = posterRepository.save(form.toPoster(findUserFromRepo,findClubFromRepo));
+        return savedPoster;
+    }
+
+    /**
+     * 공고 조회
+     */
+    // 공고 하나 조회 (by 공고id)
+    public Poster findPosterById(Long posterId){
+        Poster findPoster = posterRepository.findById(posterId).orElseThrow(() -> new PosterException("공고 조회 오류"));
+        return findPoster;
+    }
+
+    // 동아리의 공고 모두 조회 (by 동아리id)
+    public List<Poster> findPosterByClubId(Club club){
+        List<Poster> findPostersFromRepo = posterRepository.findAllByClub(club);
+        return findPostersFromRepo == null ? Collections.emptyList() : findPostersFromRepo;
+    }
+
+    /**
+     * 공고 수정
+     */
+    public Poster updatePoster(User loginUser, Long posterId, PosterForm form){
+        User findUserFromRepo = userRepository.findById(loginUser.getId()).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
+        Long findUserId = findUserFromRepo.getId();
+        Poster findPosterFromRepo = posterRepository.findById(posterId).orElseThrow(() -> new PosterException("존재하지 않는 공고입니다."));
+
+        // ! 피드 수정과 달리, 공고 수정/삭제는 동아리의 관리자만 가능하다. !
+        Club posterClub = findPosterFromRepo.getClub();
+
+        if (!findUserId.equals(posterClub.getManager().getId())) throw new PosterException("해당 유저는 동아리 관리자가 아닙니다.");
+
+        findPosterFromRepo.update(form);
+        return findPosterFromRepo;
+    }
+
+    /**
+     * 공고 삭제
+     */
+    public boolean deletePoster(User loginUser, Long posterId){
+        User findUserFromRepo = userRepository.findById(loginUser.getId()).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
+        Long findUserId = findUserFromRepo.getId();
+        Poster findPosterFromRepo = posterRepository.findById(posterId).orElseThrow(() -> new PosterException("존재하지 않는 공고입니다."));
+
+        // ! 피드 수정과 달리, 공고 수정/삭제는 동아리의 관리자만 가능하다. !
+        Club posterClub = findPosterFromRepo.getClub();
+
+        if (!findUserId.equals(posterClub.getManager().getId()))  throw new PosterException("해당 유저는 동아리 관리자가 아닙니다.");
+
+        posterRepository.deleteById(posterId);
+        return true;
+    }
+
+}

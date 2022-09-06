@@ -31,7 +31,7 @@ public class Club extends BaseTimeEntity {
     @ManyToOne
     @NotNull
     @JoinColumn(name = "managerId")
-    private User user;
+    private User manager;
 
     private String clubDesc;
 
@@ -66,13 +66,13 @@ public class Club extends BaseTimeEntity {
     private List<User> waitings;
 
     @Builder
-    public Club(Long id, String name, User user, String clubDesc, String region,
+    public Club(Long id, String name, User manager, String clubDesc, String region,
                 Integer field, Integer activityType, FileEntity profile, FileEntity background, List<User> follows,
                 List<HeartClub> hearts, List<Board> boards, List<Poster> posters,
                 List<User> members, List<User> waitings) {
         this.id = id;
         this.name = name;
-        this.user = user;
+        this.manager = manager;
         this.clubDesc = clubDesc;
         this.region = region;
         this.field = field;
@@ -108,7 +108,7 @@ public class Club extends BaseTimeEntity {
         return ClubResponse.builder()
                 .clubId(id)
                 .clubName(name)
-                .manager(user.toResponse())
+                .manager(manager.toResponse())
                 .clubDesc(clubDesc)
                 .region(region)
                 .field(field)

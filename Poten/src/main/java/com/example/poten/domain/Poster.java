@@ -1,5 +1,7 @@
 package com.example.poten.domain;
 
+import com.example.poten.dto.request.BoardForm;
+import com.example.poten.dto.request.PosterForm;
 import com.example.poten.dto.response.PosterResponse;
 import com.sun.istack.NotNull;
 import lombok.*;
@@ -20,7 +22,6 @@ import javax.persistence.Table;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Getter
 @Table(name="poster")
 public class Poster extends BaseTimeEntity {
@@ -46,6 +47,16 @@ public class Poster extends BaseTimeEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<FileEntity> posterImg;
 
+    @Builder
+    public Poster(Long id, Club club, User user, String title, String content,
+        LocalDateTime deadlineDate, List<FileEntity> posterImg) {
+        this.club = club;
+        this.user = user;
+        this.title = title;
+        this.content = content;
+        this.deadlineDate = deadlineDate;
+        this.posterImg = posterImg;
+    }
 
     public PosterResponse toResponse() {
         return PosterResponse.builder()
@@ -58,5 +69,11 @@ public class Poster extends BaseTimeEntity {
             .createdTime(getCreatedTime().toString())
             .modifiedTime(getModifiedTime().toString())
             .build();
+    }
+
+    // 공고 글 수정하기
+    public void update(PosterForm form) {
+        this.content = form.getContent();
+        this.posterImg = form.getPosterImg();
     }
 }

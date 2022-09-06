@@ -7,7 +7,6 @@ import com.example.poten.domain.HeartBoard;
 import com.example.poten.domain.User;
 import com.example.poten.dto.request.CommentForm;
 import com.example.poten.dto.request.BoardForm;
-import com.example.poten.dto.request.HeartForm;
 import com.example.poten.exception.BoardException;
 import com.example.poten.exception.ClubException;
 import com.example.poten.exception.CommentException;
@@ -65,7 +64,7 @@ public class BoardService {
      * 피드 조회
      */
     // 피드 하나 조회 (by 피드id)
-    public Board findBoardByBoardId(Long boardId){
+    public Board findBoardById(Long boardId){
         Board findBoard = boardRepository.findById(boardId).orElseThrow(() -> new BoardException("피드 조회 오류"));
         return findBoard;
     }
