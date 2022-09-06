@@ -2,11 +2,17 @@ package com.example.poten.controller;
 
 import com.example.poten.domain.Board;
 import com.example.poten.domain.Club;
+import com.example.poten.domain.Comment;
+import com.example.poten.domain.HeartBoard;
 import com.example.poten.domain.User;
 import com.example.poten.dto.request.BoardForm;
 import com.example.poten.dto.request.BoolResponse;
+import com.example.poten.dto.request.CommentForm;
+import com.example.poten.dto.request.HeartForm;
 import com.example.poten.dto.response.BoardResponse;
 import com.example.poten.dto.response.BoardResponseList;
+import com.example.poten.dto.response.CommentResponse;
+import com.example.poten.dto.response.CommentResponseList;
 import com.example.poten.service.BoardService;
 import com.example.poten.service.ClubService;
 import com.example.poten.service.UserService;
@@ -53,7 +59,7 @@ public class BoardController {
      */
     @ApiOperation(value = "피드 생성")
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadBoard(HttpServletRequest request, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) throws LoginException {
+    public ResponseEntity<?> saveBoard(HttpServletRequest request, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             logError(fieldErrors);
@@ -66,13 +72,36 @@ public class BoardController {
         return ResponseEntity.ok(savedBoard.toResponse());
     }
 
+    @ApiOperation(value = "피드 하나 조회")
+    @GetMapping("/{boardId}")
+    public ResponseEntity<?> getBoard(HttpServletRequest request, @PathVariable Long boardId) {
+        User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
+
+        Board findBoard = boardService.findBoardByBoardId(boardId);
+        return ResponseEntity.ok(findBoard.toResponse());
+    }
+
     @ApiOperation(value = "동아리별 피드 조회")
     @GetMapping("/club/{clubId}")
-    public ResponseEntity<?> getBoard(HttpServletRequest request, @PathVariable Long clubId) throws LoginException {
+    public ResponseEntity<?> getBoardByClub(HttpServletRequest request, @PathVariable Long clubId)  throws LoginException {
         User loginUser = userService.getLoginUser(request);
 
         Club club = clubService.findByClubId(clubId);
-        List<Board> boardEntityList = boardService.findByClubId(club);
+        List<Board> boardEntityList = boardService.findBoardByClubId(club);
+
+        // DTO로 변환
+        List<BoardResponse> boardResponseList = new ArrayList<>();
+        boardEntityList.forEach(b -> boardResponseList.add(b.toResponse()));
+
+        return ResponseEntity.ok(new BoardResponseList(boardResponseList));
+    }
+
+    @ApiOperation(value = "내가 쓴 피드 모두 조회")
+    @GetMapping("/mypage/boards")
+    public ResponseEntity<?> getBoardByUser(HttpServletRequest request) {
+        User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
+
+        List<Board> boardEntityList = boardService.findBoardByMemberId(loginUser);
 
         // DTO로 변환
         List<BoardResponse> boardResponseList = new ArrayList<>();
@@ -99,7 +128,7 @@ public class BoardController {
 
     @ApiOperation(value = "피드 삭제")
     @DeleteMapping("/delete/{boardId}")
-    public ResponseEntity deleteBoard(HttpServletRequest request,  @PathVariable Long boardId, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) throws LoginException {
+    public ResponseEntity deleteBoard(HttpServletRequest request, @PathVariable Long boardId, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) throws LoginException {
 
         User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
         boolean deleteResult =  boardService.deleteBoard(loginUser, boardId);
