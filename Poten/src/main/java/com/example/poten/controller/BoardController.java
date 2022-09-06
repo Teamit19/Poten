@@ -2,17 +2,11 @@ package com.example.poten.controller;
 
 import com.example.poten.domain.Board;
 import com.example.poten.domain.Club;
-import com.example.poten.domain.Comment;
-import com.example.poten.domain.HeartBoard;
 import com.example.poten.domain.User;
 import com.example.poten.dto.request.BoardForm;
 import com.example.poten.dto.request.BoolResponse;
-import com.example.poten.dto.request.CommentForm;
-import com.example.poten.dto.request.HeartForm;
 import com.example.poten.dto.response.BoardResponse;
 import com.example.poten.dto.response.BoardResponseList;
-import com.example.poten.dto.response.CommentResponse;
-import com.example.poten.dto.response.CommentResponseList;
 import com.example.poten.service.BoardService;
 import com.example.poten.service.ClubService;
 import com.example.poten.service.UserService;
