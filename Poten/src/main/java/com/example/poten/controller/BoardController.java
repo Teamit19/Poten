@@ -13,6 +13,7 @@ import com.example.poten.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.List;
+import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -52,37 +53,39 @@ public class BoardController {
      */
     @ApiOperation(value = "피드 생성")
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadBoard(HttpServletRequest request, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) {
+    public ResponseEntity<?> uploadBoard(HttpServletRequest request, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) throws LoginException {
         if (bindingResult.hasErrors()) {
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             logError(fieldErrors);
             new ResponseEntity<>(fieldErrors, HttpStatus.BAD_REQUEST);
         }
 
-        User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
-        Club userClub = clubService.findByClubId(boardForm.getClubId()); // <<TODO>> clubId로 club 객체 불러오기
+        User loginUser = userService.getLoginUser(request);
+        Club userClub = clubService.findByClubId(boardForm.getClubId());
         Board savedBoard = boardService.saveBoard(loginUser, userClub, boardForm);
         return ResponseEntity.ok(savedBoard.toResponse());
     }
 
     @ApiOperation(value = "동아리별 피드 조회")
     @GetMapping("/club/{clubId}")
-    public ResponseEntity<?> getBoard(HttpServletRequest request, @PathVariable Long clubId) {
-        User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
+    public ResponseEntity<?> getBoard(HttpServletRequest request, @PathVariable Long clubId) throws LoginException {
+        User loginUser = userService.getLoginUser(request);
 
-        Club club = clubService.findByClubId(clubId); // <<TODO>> clubId로 club 객체 불러오기
+        Club club = clubService.findByClubId(clubId);
         List<Board> boardEntityList = boardService.findByClubId(club);
 
         // DTO로 변환
         List<BoardResponse> boardResponseList = new ArrayList<>();
         boardEntityList.forEach(b -> boardResponseList.add(b.toResponse()));
 
-        return ResponseEntity.ok(new BoardResponseList(boardResponseList));
+        return ResponseEntity.ok(boardResponseList);
+
+//        return ResponseEntity.ok(new BoardResponseList(boardResponseList));
     }
 
     @ApiOperation(value = "피드 수정")
     @PutMapping("/update/{boardId}")
-    public ResponseEntity<?> uploadBoard(HttpServletRequest request,  @PathVariable Long boardId, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) {
+    public ResponseEntity<?> uploadBoard(HttpServletRequest request,  @PathVariable Long boardId, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) throws LoginException {
         if (bindingResult.hasErrors()) {
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             logError(fieldErrors);
@@ -96,7 +99,7 @@ public class BoardController {
 
     @ApiOperation(value = "피드 삭제")
     @DeleteMapping("/delete/{boardId}")
-    public ResponseEntity deleteBoard(HttpServletRequest request,  @PathVariable Long boardId, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) {
+    public ResponseEntity deleteBoard(HttpServletRequest request,  @PathVariable Long boardId, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) throws LoginException {
 
         User loginUser = userService.getLoginUser(request); // <<TODO>>  로그인한 사용자 불러오기
         boolean deleteResult =  boardService.deleteBoard(loginUser, boardId);

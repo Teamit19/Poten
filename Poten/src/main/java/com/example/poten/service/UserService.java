@@ -55,6 +55,9 @@ public class UserService {
 
     }
 
+    /**
+     * 현재 로그인 사용자
+     */
     public User getLoginUser(HttpServletRequest request) throws LoginException {
         String sessionId = request.getHeader(SessionManager.SESSION_ID);
         log.info("클라이언트로 부터 요청받은 쿠키(세션값) = {}", sessionId);
@@ -62,6 +65,9 @@ public class UserService {
     }
 
 
+    /**
+     * 카카오 로그인
+     */
     public SessionResponse kakaoLogin(String code, HttpServletRequest request) {
 
         KakaoUserInfo userInfo = oAuthService.getUserInfo(code);
