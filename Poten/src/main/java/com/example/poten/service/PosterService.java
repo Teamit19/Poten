@@ -1,6 +1,7 @@
 package com.example.poten.service;
 
 import com.example.poten.domain.Club;
+import com.example.poten.domain.FileEntity;
 import com.example.poten.domain.Poster;
 import com.example.poten.domain.User;
 import com.example.poten.dto.request.PosterForm;
@@ -23,18 +24,19 @@ public class PosterService {
     private final PosterRepository posterRepository;
     private final UserRepository userRepository;
     private final ClubRepository clubRepository;
+    private final FileService fileService;
 
-    public PosterService(PosterRepository posterRepository, UserRepository userRepository, ClubRepository clubRepository){
+    public PosterService(PosterRepository posterRepository, UserRepository userRepository, ClubRepository clubRepository, FileService fileService){
         this.posterRepository = posterRepository;
         this.userRepository = userRepository;
         this.clubRepository = clubRepository;
+        this.fileService = fileService;
     }
 
     /**
      * 공고 업로드
      */
-    public Poster savePoster(User loginUser, Club userClub, PosterForm form)
-    {
+    public Poster savePoster(User loginUser, Club userClub, PosterForm form) throws Exception {
         /**
          * 검증 0 : 해당 유저가 있는지 확인
          * 검증 1 : 해당 유저가 동아리 대표가 맞는지 확인
@@ -43,7 +45,8 @@ public class PosterService {
 
         Club findClubFromRepo = clubRepository.findByIdAndManager(userClub, findUserFromRepo).orElseThrow(() -> new ClubException("해당 유저는 동아리 대표가 아닙니다."));
 
-        Poster savedPoster = posterRepository.save(form.toPoster(findUserFromRepo,findClubFromRepo));
+        List<FileEntity> picsToFileEnity = fileService.parseFileInfo(form.getPosterImg());    // FileEntity로 변환
+        Poster savedPoster = posterRepository.save(form.toPoster(findUserFromRepo,findClubFromRepo, picsToFileEnity));
         return savedPoster;
     }
 
@@ -65,7 +68,7 @@ public class PosterService {
     /**
      * 공고 수정
      */
-    public Poster updatePoster(User loginUser, Long posterId, PosterForm form){
+    public Poster updatePoster(User loginUser, Long posterId, PosterForm form) throws Exception {
         User findUserFromRepo = userRepository.findById(loginUser.getId()).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
         Long findUserId = findUserFromRepo.getId();
         Poster findPosterFromRepo = posterRepository.findById(posterId).orElseThrow(() -> new PosterException("존재하지 않는 공고입니다."));
@@ -75,7 +78,8 @@ public class PosterService {
 
         if (!findUserId.equals(posterClub.getManager().getId())) throw new PosterException("해당 유저는 동아리 관리자가 아닙니다.");
 
-        findPosterFromRepo.update(form);
+        List<FileEntity> picsToFileEnity = fileService.parseFileInfo(form.getPosterImg());    // FileEntity로 변환
+        findPosterFromRepo.update(form, picsToFileEnity);
         return findPosterFromRepo;
     }
 

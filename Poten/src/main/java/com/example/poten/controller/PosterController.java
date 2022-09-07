@@ -4,11 +4,8 @@ import com.example.poten.domain.Board;
 import com.example.poten.domain.Club;
 import com.example.poten.domain.Poster;
 import com.example.poten.domain.User;
-import com.example.poten.dto.request.BoardForm;
 import com.example.poten.dto.request.BoolResponse;
 import com.example.poten.dto.request.PosterForm;
-import com.example.poten.dto.response.BoardResponse;
-import com.example.poten.dto.response.BoardResponseList;
 import com.example.poten.dto.response.PosterResponse;
 import com.example.poten.dto.response.PosterResponseList;
 import com.example.poten.service.ClubService;
@@ -54,7 +51,7 @@ public class PosterController {
 
     @ApiOperation(value = "공고 생성")
     @PostMapping("/upload")
-    public ResponseEntity<?> savePoster(HttpServletRequest request, @Valid @RequestBody PosterForm posterForm, BindingResult bindingResult) throws LoginException {
+    public ResponseEntity<?> savePoster(HttpServletRequest request, @Valid @RequestBody PosterForm posterForm, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             logError(fieldErrors);
@@ -93,7 +90,8 @@ public class PosterController {
 
     @ApiOperation(value = "공고 수정")
     @PutMapping("/update/{posterId}")
-    public ResponseEntity<?> uploadPoster(HttpServletRequest request,  @PathVariable Long posterId, @Valid @RequestBody PosterForm posterForm, BindingResult bindingResult) throws LoginException {
+    public ResponseEntity<?> uploadPoster(HttpServletRequest request,  @PathVariable Long posterId, @Valid @RequestBody PosterForm posterForm, BindingResult bindingResult)
+        throws Exception {
         if (bindingResult.hasErrors()) {
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             logError(fieldErrors);

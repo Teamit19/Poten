@@ -58,7 +58,8 @@ public class BoardController {
      */
     @ApiOperation(value = "피드 생성")
     @PostMapping("/upload")
-    public ResponseEntity<?> saveBoard(HttpServletRequest request, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) throws LoginException {
+    public ResponseEntity<?> saveBoard(HttpServletRequest request, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult)
+        throws Exception {
         if (bindingResult.hasErrors()) {
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             logError(fieldErrors);
@@ -111,7 +112,8 @@ public class BoardController {
 
     @ApiOperation(value = "피드 수정")
     @PutMapping("/update/{boardId}")
-    public ResponseEntity<?> uploadBoard(HttpServletRequest request,  @PathVariable Long boardId, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult) throws LoginException {
+    public ResponseEntity<?> uploadBoard(HttpServletRequest request,  @PathVariable Long boardId, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult)
+        throws Exception {
         if (bindingResult.hasErrors()) {
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             logError(fieldErrors);

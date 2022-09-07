@@ -50,7 +50,7 @@ public class ClubService {
 
         Club findClub = clubRepository.findById(clubId).orElseThrow(() -> new ClubException("존재하지 않는 동아리입니다."));
 
-        if (!loginUser.equals(findClub.getUser().getId()))  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
+        if (!loginUser.equals(findClub.getManager().getId()))  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
 
         findClub.addMember(findUser);
 
@@ -61,7 +61,7 @@ public class ClubService {
         User findUser = userRepository.findById(userId).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
         Club findClub = clubRepository.findById(clubId).orElseThrow(() -> new ClubException("존재하지 않는 동아리입니다."));
 
-        if (!loginUser.equals(findClub.getUser().getId()))  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
+        if (!loginUser.equals(findClub.getManager().getId()))  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
 
         findClub.deleteMember(findUser);
 
@@ -74,7 +74,7 @@ public class ClubService {
         Long findUserId = findUser.getId();
         Club findClub = clubRepository.findById(clubId).orElseThrow(() -> new ClubException("존재하지 않는 동아리입니다."));
 
-        if (!findUserId.equals(findClub.getUser().getId()))  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
+        if (!findUserId.equals(findClub.getManager().getId()))  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
 
         findClub.update(form);
         return findClub;
@@ -86,7 +86,7 @@ public class ClubService {
         Long findUserId = findUser.getId();
         Club findClub = clubRepository.findById(clubId).orElseThrow(() -> new ClubException("존재하지 않는 동아리입니다."));
 
-        if (!findUserId.equals(findClub.getUser().getId())) throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
+        if (!findUserId.equals(findClub.getManager().getId())) throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
 
         clubRepository.deleteById(clubId);
 

@@ -39,7 +39,7 @@ public class ClubForm {
     public Club toClub(User manager){
         return Club.builder()
                 .name(this.name)
-                .user(manager)
+                .manager(manager)
                 .clubDesc(this.clubDesc)
                 .region(this.region)
                 .field(this.field)

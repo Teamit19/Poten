@@ -20,7 +20,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Table(name="poster")
@@ -72,8 +71,8 @@ public class Poster extends BaseTimeEntity {
     }
 
     // 공고 글 수정하기
-    public void update(PosterForm form) {
+    public void update(PosterForm form, List<FileEntity> pics) {
         this.content = form.getContent();
-        this.posterImg = form.getPosterImg();
+        this.posterImg = pics;
     }
 }
