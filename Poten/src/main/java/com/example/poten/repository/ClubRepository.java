@@ -12,9 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface ClubRepository  extends JpaRepository<Club, Long> {
 
     List<Club> findAllByMembers(User user);
-    Optional<Club> findByIdAndManager(Club club, User user);
-
-    List<Club> findByNameContaining(String name);
+    List<Club> findAllByNameContaining(String name);
 
 }
 

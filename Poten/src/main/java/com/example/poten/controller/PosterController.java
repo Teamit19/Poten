@@ -1,6 +1,5 @@
 package com.example.poten.controller;
 
-import com.example.poten.domain.Board;
 import com.example.poten.domain.Club;
 import com.example.poten.domain.Poster;
 import com.example.poten.domain.User;
@@ -14,6 +13,7 @@ import com.example.poten.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -50,8 +50,8 @@ public class PosterController {
     }
 
     @ApiOperation(value = "공고 생성")
-    @PostMapping("/upload")
-    public ResponseEntity<?> savePoster(HttpServletRequest request, @Valid @RequestBody PosterForm posterForm, BindingResult bindingResult) throws Exception {
+    @PostMapping("/{clubId}/upload")
+    public ResponseEntity<?> savePoster(HttpServletRequest request, @Valid @RequestBody PosterForm posterForm, @PathVariable Long clubId,BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             logError(fieldErrors);
@@ -59,7 +59,8 @@ public class PosterController {
         }
 
         User loginUser = userService.getLoginUser(request);
-        Club userClub = clubService.findByClubId(posterForm.getClubId());
+        Club userClub = clubService.findByClubId(clubId);
+//        Club userClub = clubService.findByClubId(posterForm.getClubId());
         Poster savedPoster = posterService.savePoster(loginUser, userClub, posterForm);
         return ResponseEntity.ok(savedPoster.toResponse());
     }
@@ -86,6 +87,15 @@ public class PosterController {
         posterEntityList.forEach(b -> posterResponseList.add(b.toResponse()));
 
         return ResponseEntity.ok(new PosterResponseList(posterResponseList));
+    }
+
+    @ApiOperation(value = "검색 결과 - 공고")
+    @PostMapping("/search")
+    public ResponseEntity searchClub(@RequestBody Map<String, String> keywordMap){
+        String keyword = keywordMap.get("keyword");
+        List<PosterResponse> searchResult = posterService.searchPoster(keyword);
+
+        return ResponseEntity.ok(searchResult);
     }
 
     @ApiOperation(value = "공고 수정")

@@ -9,10 +9,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Getter
 public class PosterForm {
@@ -23,6 +29,7 @@ public class PosterForm {
     @NotEmpty
     private String content;
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime deadlineDate;
 
     private List<MultipartFile> posterImg;

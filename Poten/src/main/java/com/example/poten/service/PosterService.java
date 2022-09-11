@@ -5,12 +5,16 @@ import com.example.poten.domain.FileEntity;
 import com.example.poten.domain.Poster;
 import com.example.poten.domain.User;
 import com.example.poten.dto.request.PosterForm;
+import com.example.poten.dto.response.ClubResponse;
+import com.example.poten.dto.response.PosterResponse;
 import com.example.poten.exception.ClubException;
 import com.example.poten.exception.PosterException;
 import com.example.poten.exception.UserException;
 import com.example.poten.repository.ClubRepository;
 import com.example.poten.repository.PosterRepository;
 import com.example.poten.repository.UserRepository;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -43,10 +47,12 @@ public class PosterService {
          */
         User findUserFromRepo = userRepository.findById(loginUser.getId()).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
 
-        Club findClubFromRepo = clubRepository.findByIdAndManager(userClub, findUserFromRepo).orElseThrow(() -> new ClubException("해당 유저는 동아리 대표가 아닙니다."));
+        Club findClub = clubRepository.findById(userClub.getId()).orElseThrow(() -> new ClubException("존재하지 않는 동아리입니다."));
 
+        if (loginUser.getId()!=findClub.getManager().getId())  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
+        
         List<FileEntity> picsToFileEnity = fileService.parseFileInfo(form.getPosterImg());    // FileEntity로 변환
-        Poster savedPoster = posterRepository.save(form.toPoster(findUserFromRepo,findClubFromRepo, picsToFileEnity));
+        Poster savedPoster = posterRepository.save(form.toPoster(findUserFromRepo, findClub, picsToFileEnity));
         return savedPoster;
     }
 
@@ -63,6 +69,23 @@ public class PosterService {
     public List<Poster> findPosterByClubId(Club club){
         List<Poster> findPostersFromRepo = posterRepository.findAllByClub(club);
         return findPostersFromRepo == null ? Collections.emptyList() : findPostersFromRepo;
+    }
+
+    // 검색 - 공고
+    public List<PosterResponse> searchPoster(String keyword){
+        List<Poster> posterList=new ArrayList<>();
+        List<PosterResponse> result=new ArrayList<>();
+
+        List<Club> searchClubList = clubRepository.findAllByNameContaining(keyword);
+
+        for(Club club : searchClubList) {
+            posterList.addAll(posterRepository.findAllByClub(club));
+        }
+        for(Poster poster : posterList) {
+            result.add(poster.toResponse());
+        }
+
+        return result;
     }
 
     /**

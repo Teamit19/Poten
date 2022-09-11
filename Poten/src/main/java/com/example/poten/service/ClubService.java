@@ -110,7 +110,7 @@ public class ClubService {
      */
     public List<ClubResponse> searchClub(String keyword){
         List<ClubResponse> result=new ArrayList<>();
-        List<Club> searchList = clubRepository.findByNameContaining(keyword);
+        List<Club> searchList = clubRepository.findAllByNameContaining(keyword);
 
         for(Club club : searchList) {
             result.add(club.toResponse());
