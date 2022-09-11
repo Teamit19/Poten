@@ -9,6 +9,7 @@ import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 public class BoardForm {
@@ -18,24 +19,23 @@ public class BoardForm {
     @NotEmpty
     private String content;
 
-    private List<FileEntity> pics;
+    private List<MultipartFile> pics;
 
-    public BoardForm(String content) {
-        this.content = content;
-    }
-
-    public BoardForm(String content, List<FileEntity> pics) {
+    @Builder
+    public BoardForm(Long clubId, String content,
+        List<MultipartFile> pics) {
+        this.clubId = clubId;
         this.content = content;
         this.pics = pics;
     }
 
     /* DTO -> Entity */
-    public Board toBoard(User writer, Club club){
+    public Board toBoard(User writer, Club club, List<FileEntity> pics){
         return Board.builder()
                     .user(writer)
                     .content(this.content)
                     .club(club)
-                    .pics(this.pics)
+                    .pics(pics)
                     .build();
     }
 }

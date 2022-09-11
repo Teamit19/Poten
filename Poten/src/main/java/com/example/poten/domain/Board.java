@@ -78,9 +78,9 @@ public class Board extends BaseTimeEntity {
     }
 
     // 피드 글 수정하기
-    public void update(BoardForm form) {
+    public void update(BoardForm form, List<FileEntity> pics)  {
         this.content = form.getContent();
-        this.pics = form.getPics();
+        this.pics = pics;
     }
 
 }
