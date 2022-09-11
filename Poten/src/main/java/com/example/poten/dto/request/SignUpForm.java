@@ -37,6 +37,8 @@ public class SignUpForm {
     @NotBlank(message = "소속은 필수 입력값입니다.")
     private String school;
 
+
+
     @Builder
     public User toUser() {
         return User.builder()

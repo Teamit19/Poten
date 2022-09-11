@@ -5,13 +5,19 @@ import com.example.poten.domain.FileEntity;
 import com.example.poten.domain.Follow;
 import com.example.poten.domain.User;
 import com.example.poten.dto.response.UserResponse;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Getter
 public class ClubForm {
@@ -29,15 +35,15 @@ public class ClubForm {
     @NotEmpty
     private String region;
 
-    @NotEmpty
+    @NotNull
     private Integer field;
 
-    @NotEmpty
+    @NotNull
     private Integer activityType;
 
-    private FileEntity profile;
+    private List<MultipartFile> profile;
 
-    private FileEntity background;
+    private List<MultipartFile> background;
 
     private List<Follow> follows;
 
@@ -52,10 +58,10 @@ public class ClubForm {
                 .region(this.region)
                 .field(this.field)
                 .activityType(this.activityType)
-                .profile(this.profile)
-                .background(this.background)
                 .following(this.follows)
                 .build();
     }
+
+
 
 }

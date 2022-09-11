@@ -27,12 +27,15 @@ public class ClubService {
 
     private final FollowRepository followRepository;
 
+    private final FileService fileService;
 
-    public ClubService(UserRepository userRepository, ClubRepository clubRepository, HeartClubRepository heartClubRepository, FollowRepository followRepository) {
+
+    public ClubService(UserRepository userRepository, ClubRepository clubRepository, HeartClubRepository heartClubRepository, FollowRepository followRepository, FileService fileService) {
         this.userRepository = userRepository;
         this.clubRepository = clubRepository;
         this.heartClubRepository = heartClubRepository;
         this.followRepository = followRepository;
+        this.fileService = fileService;
     }
 
     public Club findByClubId(Long clubId){
@@ -58,7 +61,7 @@ public class ClubService {
         User findUser = userRepository.findById(userId).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
         Club findClub = clubRepository.findById(clubId).orElseThrow(() -> new ClubException("존재하지 않는 동아리입니다."));
 
-        if (!loginUser.equals(findClub.getManager().getId()))  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
+        if (loginUser.getId()!=findClub.getManager().getId())  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
 
         findClub.addMember(findUser);
 
@@ -72,7 +75,7 @@ public class ClubService {
         User findUser = userRepository.findById(userId).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
         Club findClub = clubRepository.findById(clubId).orElseThrow(() -> new ClubException("존재하지 않는 동아리입니다."));
 
-        if (!loginUser.equals(findClub.getManager().getId()))  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
+        if (loginUser.getId()!=findClub.getManager().getId())  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
 
         findClub.deleteMember(findUser);
 
@@ -102,14 +105,42 @@ public class ClubService {
     }
 
 
-    public Club updateClub(User user, Long clubId, ClubForm form){
-        User findUser = userRepository.findById(user.getId()).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
+    public Club updateClub(User loginUser, Long clubId, ClubForm form){
+        User findUser = userRepository.findById(loginUser.getId()).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
         Long findUserId = findUser.getId();
         Club findClub = clubRepository.findById(clubId).orElseThrow(() -> new ClubException("존재하지 않는 동아리입니다."));
 
-        if (!findUserId.equals(findClub.getManager().getId()))  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
+        if (loginUser.getId()!=findClub.getManager().getId())  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
 
         findClub.update(form);
+        return findClub;
+    }
+
+    public Club updateClubProfile(User loginUser, Long clubId, ClubForm form) throws Exception {
+        User findUser = userRepository.findById(loginUser.getId()).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
+        Long findUserId = findUser.getId();
+        Club findClub = clubRepository.findById(clubId).orElseThrow(() -> new ClubException("존재하지 않는 동아리입니다."));
+
+        if (loginUser.getId()!=findClub.getManager().getId())  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
+
+        List<FileEntity> profileToFileEnity = fileService.parseFileInfo(form.getProfile());    // FileEntity로 변환
+        findClub.updateProfile(profileToFileEnity);
+
+        return findClub;
+    }
+
+    public Club updateClubBg(User loginUser, Long clubId, ClubForm form) throws Exception {
+        User findUser = userRepository.findById(loginUser.getId()).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
+        Long findUserId = findUser.getId();
+        Club findClub = clubRepository.findById(clubId).orElseThrow(() -> new ClubException("존재하지 않는 동아리입니다."));
+
+        if (loginUser.getId()!=findClub.getManager().getId())  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
+
+        List<FileEntity> bgToFileEnity = fileService.parseFileInfo(form.getBackground());    // FileEntity로 변환
+        findClub.updateBackground(bgToFileEnity);
+
+
+
         return findClub;
     }
 
@@ -119,7 +150,7 @@ public class ClubService {
         Long findUserId = findUser.getId();
         Club findClub = clubRepository.findById(clubId).orElseThrow(() -> new ClubException("존재하지 않는 동아리입니다."));
 
-        if (!findUserId.equals(findClub.getManager().getId())) throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
+        if (findUser.getId()!=findClub.getManager().getId())  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
 
         clubRepository.deleteById(clubId);
 
@@ -185,6 +216,15 @@ public class ClubService {
 
     }
 
+    /**
+     *  동아리 회원 목록 조회
+     */
+    public List<UserResponse> findMembersByClub(Long clubId){
+        Club findClubFromRepo = clubRepository.findById(clubId).orElseThrow(() -> new ClubException("존재하지 않는 동아리입니다."));
+        ClubResponse clubResponse = findClubFromRepo.toResponse();
+
+        return clubResponse.getMembers();
+    }
 
     /**
      *  동아리 팔로워 목록 조회
@@ -197,7 +237,7 @@ public class ClubService {
     }
 
     /**
-     *  사용자 동아리 팔로잉 목록 조회
+     *  사용자가 팔로잉하는 동아리 목록 조회
      */
     public List<ClubResponse> findFollowingByUser(User loginUser, Long clubId){
         User findUser = userRepository.findById(loginUser.getId()).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
@@ -218,7 +258,7 @@ public class ClubService {
         Club findClub = clubRepository.findById(clubId).orElseThrow(() -> new ClubException("존재하지 않는 동아리입니다."));
         User newManager = userRepository.findById(newManagerId).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
 
-        if (!manager.getId().equals(findClub.getManager().getId())) throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
+        if (manager.getId()!=findClub.getManager().getId())  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
 
 
         findClub.changeManager(newManager);

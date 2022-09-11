@@ -28,7 +28,7 @@ public class UserController {
 
     @ApiOperation(value = "회원정보 입력")
     @PostMapping("/{id}")
-    public ResponseEntity<?> signUp(@RequestBody SignUpForm signUpForm, @PathVariable Long id) {
+    public ResponseEntity<?> signUp(@PathVariable Long id, @RequestBody SignUpForm signUpForm) {
         log.info("회원가입 버튼 눌림");
         userService.signUp(signUpForm, id);
 

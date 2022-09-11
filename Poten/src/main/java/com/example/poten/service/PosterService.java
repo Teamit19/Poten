@@ -76,7 +76,7 @@ public class PosterService {
         // ! 피드 수정과 달리, 공고 수정/삭제는 동아리의 관리자만 가능하다. !
         Club posterClub = findPosterFromRepo.getClub();
 
-        if (!findUserId.equals(posterClub.getManager().getId())) throw new PosterException("해당 유저는 동아리 관리자가 아닙니다.");
+        if (findUserId!=posterClub.getManager().getId()) throw new PosterException("해당 유저는 동아리 관리자가 아닙니다.");
 
         List<FileEntity> picsToFileEnity = fileService.parseFileInfo(form.getPosterImg());    // FileEntity로 변환
         findPosterFromRepo.update(form, picsToFileEnity);
@@ -94,7 +94,7 @@ public class PosterService {
         // ! 피드 수정과 달리, 공고 수정/삭제는 동아리의 관리자만 가능하다. !
         Club posterClub = findPosterFromRepo.getClub();
 
-        if (!findUserId.equals(posterClub.getManager().getId()))  throw new PosterException("해당 유저는 동아리 관리자가 아닙니다.");
+        if (findUserId!=posterClub.getManager().getId()) throw new PosterException("해당 유저는 동아리 관리자가 아닙니다.");
 
         posterRepository.deleteById(posterId);
         return true;

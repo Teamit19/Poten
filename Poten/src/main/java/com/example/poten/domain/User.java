@@ -3,10 +3,8 @@ package com.example.poten.domain;
 import com.example.poten.dto.request.SignUpForm;
 import com.example.poten.dto.response.UserResponse;
 import lombok.*;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor

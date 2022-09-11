@@ -95,7 +95,7 @@ public class BoardService {
         Long findUserId = findUserFromRepo.getId();
         Board findBoardFromRepo = boardRepository.findById(boardId).orElseThrow(() -> new BoardException("존재하지 않는 피드입니다."));
 
-        if (!findUserId.equals(findBoardFromRepo.getUser().getId()))  throw new BoardException("해당 유저는 피드 작성자가 아닙니다.");
+        if (findUserId!=findBoardFromRepo.getUser().getId())  throw new BoardException("해당 유저는 피드 작성자가 아닙니다.");
 
         List<FileEntity> picsToFileEnity = fileService.parseFileInfo(form.getPics());    // FileEntity로 변환
         findBoardFromRepo.update(form, picsToFileEnity);
@@ -111,7 +111,7 @@ public class BoardService {
         Long findUserId = findUserFromRepo.getId();
         Board findBoardFromRepo = boardRepository.findById(boardId).orElseThrow(() -> new BoardException("존재하지 않는 피드입니다."));
 
-        if (!findUserId.equals(findBoardFromRepo.getUser().getId())) throw new BoardException("해당 유저는 피드 작성자가 아닙니다.");
+        if (findUserId!=findBoardFromRepo.getUser().getId())  throw new BoardException("해당 유저는 피드 작성자가 아닙니다.");
 
         boardRepository.deleteById(boardId);
         return true;
@@ -198,7 +198,7 @@ public class BoardService {
         Long findUserId = findFromRepoUser.getId();
         Comment findCommentFromRepo = commentRepository.findById(commentId).orElseThrow(() -> new CommentException("존재하지 않는 댓글입니다."));
 
-        if(! findUserId.equals(findCommentFromRepo.getUser().getId())) throw new CommentException("해당 유저는 댓글 작성자가 아닙니다.");
+        if(findUserId!=findCommentFromRepo.getUser().getId()) throw new CommentException("해당 유저는 댓글 작성자가 아닙니다.");
 
         findCommentFromRepo.update(form);
         return findCommentFromRepo ;
@@ -212,7 +212,7 @@ public class BoardService {
         Long findUserId = findFromRepoUser.getId();
         Comment findCommentFromRepo = commentRepository.findById(commentId).orElseThrow(() -> new CommentException("존재하지 않는 댓글입니다."));
 
-        if(! findUserId.equals(findCommentFromRepo.getUser().getId())) throw new CommentException("해당 유저는 댓글 작성자가 아닙니다.");
+        if(findUserId!=findCommentFromRepo.getUser().getId()) throw new CommentException("해당 유저는 댓글 작성자가 아닙니다.");
 
         commentRepository.delete(findCommentFromRepo);
         return true;

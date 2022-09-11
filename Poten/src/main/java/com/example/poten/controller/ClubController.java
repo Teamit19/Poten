@@ -37,16 +37,16 @@ public class ClubController {
     }
 
     private void logError(List<FieldError> errors) {
-        log.error("Board Errors = {}", errors);
+        log.error("Club Errors = {}", errors);
     }
 
     @ApiOperation(value = "동아리 생성")
     @PostMapping("")
-    public ResponseEntity<?> createClub(HttpServletRequest request, @Valid @RequestBody ClubForm clubForm, BindingResult bindingResult) throws LoginException {
+    public ResponseEntity<?> createClub(BindingResult bindingResult, HttpServletRequest request, @Valid @RequestBody ClubForm clubForm) throws LoginException {
         if (bindingResult.hasErrors()) {
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             logError(fieldErrors);
-            new ResponseEntity<>(fieldErrors, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(fieldErrors, HttpStatus.BAD_REQUEST);
         }
 
         User loginUser = userService.getLoginUser(request);
@@ -58,12 +58,7 @@ public class ClubController {
 
     @ApiOperation(value = "동아리 멤버 추가")
     @PostMapping("/{clubId}/{userId}")
-    public ResponseEntity addClubMember(HttpServletRequest request,  @PathVariable Long clubId, @PathVariable Long userId, BindingResult bindingResult) throws LoginException {
-        if (bindingResult.hasErrors()) {
-            final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-            logError(fieldErrors);
-            new ResponseEntity<>(fieldErrors, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity addClubMember(HttpServletRequest request,  @PathVariable Long clubId, @PathVariable Long userId) throws Exception {
 
         User loginUser = userService.getLoginUser(request);
         UserResponse addUser = clubService.addMember(loginUser, userId, clubId);
@@ -74,12 +69,7 @@ public class ClubController {
 
     @ApiOperation(value = "동아리 가입 신청")
     @PostMapping("/{clubId}/join")
-    public ResponseEntity joinClub(HttpServletRequest request,  @PathVariable Long clubId, BindingResult bindingResult) throws LoginException {
-        if (bindingResult.hasErrors()) {
-            final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-            logError(fieldErrors);
-            new ResponseEntity<>(fieldErrors, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity joinClub(HttpServletRequest request,  @PathVariable Long clubId) throws LoginException {
 
         User loginUser = userService.getLoginUser(request);
         Boolean joinResult = clubService.joinClub(loginUser, clubId);
@@ -100,7 +90,7 @@ public class ClubController {
     @GetMapping("/{clubId}/member")
     public ResponseEntity<?> getClubMembers(HttpServletRequest request, @PathVariable Long clubId) throws LoginException {
         User loginUser = userService.getLoginUser(request);
-        List<UserResponse> clubMembers = clubService.findFollowersByClub(clubId);
+        List<UserResponse> clubMembers = clubService.findMembersByClub(clubId);
 
         return ResponseEntity.ok(clubMembers);
     }
@@ -117,11 +107,11 @@ public class ClubController {
 
     @ApiOperation(value = "동아리 정보 수정")
     @PutMapping("/{clubId}")
-    public ResponseEntity<?> updateClub(HttpServletRequest request,  @PathVariable Long clubId, @Valid @RequestBody ClubForm clubForm, BindingResult bindingResult) throws LoginException {
+    public ResponseEntity<?> updateClub(BindingResult bindingResult, HttpServletRequest request,  @PathVariable Long clubId, @Valid @RequestBody ClubForm clubForm) throws LoginException {
         if (bindingResult.hasErrors()) {
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             logError(fieldErrors);
-            new ResponseEntity<>(fieldErrors, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(fieldErrors, HttpStatus.BAD_REQUEST);
         }
 
         User loginUser = userService.getLoginUser(request);

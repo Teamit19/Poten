@@ -8,9 +8,12 @@ import com.example.poten.dto.response.SessionResponse;
 import com.example.poten.dto.response.UserResponse;
 import com.example.poten.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,13 +22,15 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@Transactional
 public class UserService {
 
     @Value("AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC")
     String ADMIN_TOKEN;
     private final OAuthService oAuthService;
 
-    private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private final SessionManager sessionManager;
 
@@ -42,7 +47,6 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
 
         user.get().update(signUpForm);
-        userRepository.save(user.get());
 
     }
 

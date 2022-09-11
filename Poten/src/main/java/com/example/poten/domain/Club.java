@@ -39,11 +39,11 @@ public class Club extends BaseTimeEntity {
 
     private Integer activityType;
 
-    @OneToOne
-    private FileEntity profile;
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    private List<FileEntity> profile;
 
-    @OneToOne
-    private FileEntity background;
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    private List<FileEntity> background;
 
     @OneToMany(mappedBy = "following", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Follow> following;
@@ -65,7 +65,7 @@ public class Club extends BaseTimeEntity {
 
     @Builder
     public Club(Long id, String name, User manager, String clubDesc, String region,
-                Integer field, Integer activityType, FileEntity profile, FileEntity background, List<Follow> following,
+                Integer field, Integer activityType, List<FileEntity> profile, List<FileEntity> background, List<Follow> following,
                 List<HeartClub> hearts, List<Board> boards, List<Poster> posters,
                 List<User> members, List<User> waitings) {
         this.id = id;
@@ -149,6 +149,14 @@ public class Club extends BaseTimeEntity {
 //        follows.remove(user);
 //
 //    }
+
+    public void updateProfile(List<FileEntity> profile) {
+        this.profile = profile;
+    }
+
+    public void updateBackground(List<FileEntity> background) {
+        this.background = background;
+    }
 
 
 
