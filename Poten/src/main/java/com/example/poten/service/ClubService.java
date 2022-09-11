@@ -49,6 +49,7 @@ public class ClubService {
     public Club saveClub(User user, ClubForm clubForm) {
 
         Club saveClub = clubForm.toClub(user);
+        saveClub.addMember(user);
         clubRepository.save(saveClub);
 
         return saveClub;
@@ -166,7 +167,7 @@ public class ClubService {
         Club findClubFromRepo = clubRepository.findById(clubId).orElseThrow(() -> new ClubException("존재하지 않는 동아리입니다."));
 
         // 이미 좋아요 누른 유저인지 확인
-        if(heartClubRepository.findHeartClubByUserAndClub(loginUser, findClubFromRepo).isPresent()) throw new HeartException("이미 좋아요 누른 동아리입니다.");
+        if(heartClubRepository.findByUserAndClub(loginUser, findClubFromRepo).isPresent()) throw new HeartException("이미 좋아요 누른 동아리입니다.");
 
         HeartClub heartClub = HeartClub.builder()
                 .club(findClubFromRepo)
@@ -183,7 +184,7 @@ public class ClubService {
     public boolean unHeartClub(User loginUser, Long clubId) {
         Club findClubFromRepo = clubRepository.findById(clubId).orElseThrow(() -> new ClubException("존재하지 않는 동아리입니다."));
 
-        HeartClub heartClub = heartClubRepository.findHeartClubByUserAndClub(loginUser, findClubFromRepo).orElseThrow(() -> new HeartException("좋아요 누르지 않은 동아리입니다."));
+        HeartClub heartClub = heartClubRepository.findByUserAndClub(loginUser, findClubFromRepo).orElseThrow(() -> new HeartException("좋아요 누르지 않은 동아리입니다."));
 
         heartClubRepository.delete(heartClub);
 

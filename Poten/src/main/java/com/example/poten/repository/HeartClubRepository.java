@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HeartClubRepository extends JpaRepository<HeartClub, Long> {
-    Optional<HeartClub> findHeartClubByUserAndClub(User user, Club club);
+    Optional<HeartClub> findByUserAndClub(User user, Club club);
 
 }
