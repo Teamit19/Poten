@@ -10,7 +10,6 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 @Getter
 public class User{
@@ -35,7 +34,6 @@ public class User{
 
     private String school;
 
-    private String role;
 
 
     @OneToOne
@@ -82,7 +80,6 @@ public class User{
         this.birth = birth;
         this.phone = phone;
         this.school = school;
-        this.role = "ROLE_USER";
         this.profile = profile;
     }
 

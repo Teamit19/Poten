@@ -46,11 +46,10 @@ public class UserController {
         User loginUser = userService.getLoginUser(request);
         log.info("현재 로그인한 사용자"+ loginUser.getEmail());
 
-
-
         return ResponseEntity.ok(userResponse);
 
     }
+
 
 }
 
