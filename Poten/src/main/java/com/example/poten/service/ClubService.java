@@ -105,6 +105,20 @@ public class ClubService {
         return clubResponse.getMembers();
     }
 
+    /**
+     *  동아리 검색
+     */
+    public List<ClubResponse> searchClub(String keyword){
+        List<ClubResponse> result=new ArrayList<>();
+        List<Club> searchList = clubRepository.findByNameContaining(keyword);
+
+        for(Club club : searchList) {
+            result.add(club.toResponse());
+        }
+
+        return result;
+    }
+
 
     public Club updateClub(User loginUser, Long clubId, ClubForm form){
         User findUser = userRepository.findById(loginUser.getId()).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));

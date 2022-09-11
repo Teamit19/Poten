@@ -22,6 +22,7 @@ import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -76,6 +77,16 @@ public class ClubController {
 
         return ResponseEntity.ok(new BoolResponse(joinResult));
     }
+
+    @ApiOperation(value = "동아리 검색")
+    @PostMapping("/search")
+    public ResponseEntity searchClub(@RequestBody Map<String, String> keywordMap){
+        String keyword = keywordMap.get("keyword");
+        List<ClubResponse> searchResult = clubService.searchClub(keyword);
+
+        return ResponseEntity.ok(searchResult);
+    }
+    
 
     @ApiOperation(value = "동아리 조회")
     @GetMapping("/{clubId}")
