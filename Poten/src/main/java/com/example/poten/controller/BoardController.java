@@ -18,6 +18,7 @@ import java.util.List;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,19 +56,39 @@ public class BoardController {
      */
     @ApiOperation(value = "피드 생성")
     @PostMapping("/upload")
-    public ResponseEntity<?> saveBoard(HttpServletRequest request, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult)
+    public ResponseEntity<?> saveBoard(HttpServletRequest request, @RequestBody BoardForm boardForm, BindingResult bindingResult)
         throws Exception {
+        log.error("들어옴");
         if (bindingResult.hasErrors()) {
+            log.error("바인딩 에러");
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             logError(fieldErrors);
             new ResponseEntity<>(fieldErrors, HttpStatus.BAD_REQUEST);
         }
-
-        User loginUser = userService.getLoginUser(request);
+        log.error("111");
+        User loginUser = userService.getLoginUser(request) ;
+        log.error("222");
         Club userClub = clubService.findByClubId(boardForm.getClubId());
+        log.error("333");
         Board savedBoard = boardService.saveBoard(loginUser, userClub, boardForm);
+        log.error("44444");
         return ResponseEntity.ok(savedBoard.toResponse());
     }
+
+    @ApiOperation(value = "피드 모두 조회")
+    @GetMapping("/all")
+    public ResponseEntity<?> getBoardAll(HttpServletRequest request) throws LoginException {
+        User loginUser = userService.getLoginUser(request);
+
+        List<Board> boardEntityList = boardService.findBoardAll();
+
+        // DTO로 변환
+        List<BoardResponse> boardResponseList = new ArrayList<>();
+        boardEntityList.forEach(b -> boardResponseList.add(b.toResponse()));
+
+        return ResponseEntity.ok(new BoardResponseList(boardResponseList));
+    }
+
 
     @ApiOperation(value = "피드 하나 조회")
     @GetMapping("/{boardId}")
@@ -109,7 +130,7 @@ public class BoardController {
     }
 
     @ApiOperation(value = "내가 쓴 피드 모두 조회")
-    @GetMapping("/mypage/boards")
+    @GetMapping("/mypage")
     public ResponseEntity<?> getBoardByUser(HttpServletRequest request) throws LoginException {
         User loginUser = userService.getLoginUser(request);
 
@@ -124,7 +145,7 @@ public class BoardController {
 
     @ApiOperation(value = "피드 수정")
     @PutMapping("/update/{boardId}")
-    public ResponseEntity<?> uploadBoard(HttpServletRequest request,  @PathVariable Long boardId, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult)
+    public ResponseEntity<?> updateBoard(HttpServletRequest request,  @PathVariable Long boardId, @Valid @RequestBody BoardForm boardForm, BindingResult bindingResult)
         throws Exception {
         if (bindingResult.hasErrors()) {
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();

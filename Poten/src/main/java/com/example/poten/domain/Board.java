@@ -51,19 +51,20 @@ public class Board extends BaseTimeEntity {
         this.user = user;
         this.club = club;
         this.content = content;
-        this.hearts = hearts;
-        this.comment = comment;
-        this.pics = pics;
+        this.hearts = new ArrayList<HeartBoard>();
+        this.comment = new ArrayList<Comment>();
+        this.pics = new ArrayList<FileEntity>();
     }
 
     /* Entity -> DTO */
     public BoardResponse toResponse(){
         // 리스트 형식인 필드를  DTO로 변환
         List<HeartBoardResponse> heartsResponses = new ArrayList<>();
-        hearts.forEach(h -> heartsResponses.add(h.toResponse()));
+        if (! heartsResponses.isEmpty()) hearts.forEach(h -> heartsResponses.add(h.toResponse()));
+
 
         List<CommentResponse> commentResponses = new ArrayList<>();
-        comment.forEach(h -> commentResponses.add(h.toResponse()));
+        if (! commentResponses.isEmpty())  comment.forEach(h -> commentResponses.add(h.toResponse()));
 
         return BoardResponse.builder()
             .boardId(id)

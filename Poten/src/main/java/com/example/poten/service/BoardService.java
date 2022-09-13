@@ -73,6 +73,12 @@ public class BoardService {
         return findBoard;
     }
 
+    // 피드 모두 조회
+    public List<Board> findBoardAll(){
+        return boardRepository.findAll();
+    }
+
+
     // 피드 모두 조회 (by 사용자Id) / 내가 쓴 글
     public List<Board> findBoardByMemberId(User loginUser){
        List<Board> findFromRepoBoard =  boardRepository.findAllByUser(loginUser);
