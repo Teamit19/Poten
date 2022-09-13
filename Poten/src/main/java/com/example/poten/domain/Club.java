@@ -35,9 +35,9 @@ public class Club extends BaseTimeEntity {
 
     private String region;
 
-    private Integer field;
+    private String field;
 
-    private Integer activityType;
+    private String activityType;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<FileEntity> profile;
@@ -65,7 +65,7 @@ public class Club extends BaseTimeEntity {
 
     @Builder
     public Club(Long id, String name, User manager, String clubDesc, String region,
-                Integer field, Integer activityType, List<FileEntity> profile, List<FileEntity> background, List<Follow> following,
+                String field, String activityType, List<FileEntity> profile, List<FileEntity> background, List<Follow> following,
                 List<HeartClub> hearts, List<Board> boards, List<Poster> posters,
                 List<User> members, List<User> waitings) {
         this.id = id;

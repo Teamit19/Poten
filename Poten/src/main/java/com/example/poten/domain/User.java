@@ -32,8 +32,6 @@ public class User{
 
     private String school;
 
-
-
     @OneToOne
     private FileEntity profile;
 
@@ -46,12 +44,6 @@ public class User{
 
     public void update(SignUpForm signUpForm) {
         this.name = signUpForm.getName();
-        this.nickname = signUpForm.getNickName();
-        this.birth = signUpForm.getBirth();
-        this.phone = signUpForm.getPhone();
-        this.school = signUpForm.getSchool();
-        this.sex = signUpForm.getSex();
-
     }
 
     public UserResponse toResponse() {
@@ -80,6 +72,7 @@ public class User{
         this.school = school;
         this.profile = profile;
     }
+
 
 
 }

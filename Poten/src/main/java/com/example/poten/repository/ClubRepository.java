@@ -14,5 +14,7 @@ public interface ClubRepository  extends JpaRepository<Club, Long> {
     List<Club> findAllByMembers(User user);
     List<Club> findAllByNameContaining(String name);
 
+    List<Club> findAllByField(String field);
+
 }
 

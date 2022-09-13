@@ -4,8 +4,9 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @AllArgsConstructor
 @Builder
 public class ClubResponse {
@@ -14,8 +15,8 @@ public class ClubResponse {
     private UserResponse manager;
     private String clubDesc;
     private String region;
-    private Integer field; // <<TODO>> ?
-    private Integer activityType; // <<TODO>> ?
+    private String field;
+    private String activityType;
 
     private List<UserResponse> follows;
     private List<HeartClubResponse> hearts;
