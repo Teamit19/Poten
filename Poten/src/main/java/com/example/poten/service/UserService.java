@@ -89,9 +89,10 @@ public class UserService {
     /**
      * 카카오 로그인
      */
-    public SessionResponse kakaoLogin(String code, HttpServletRequest request) {
+    public SessionResponse kakaoLogin(String token, HttpServletRequest request) {
+        KakaoUserInfo userInfo = oAuthService.getUserInfoByToken(token);
 
-        KakaoUserInfo userInfo = oAuthService.getUserInfo(code);
+//        KakaoUserInfo userInfo = oAuthService.getUserInfo(code);
         String email = userInfo.getKakaoEmail();
         String pw = userInfo.getId() + ADMIN_TOKEN;
         String age = userInfo.getAgeRange();
