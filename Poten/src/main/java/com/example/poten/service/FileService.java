@@ -49,18 +49,21 @@ public class FileService {
             for (MultipartFile multipartFile : files) {
                 String fileType;
                 String contentType = multipartFile.getContentType();
-
-                if(ObjectUtils.isEmpty(contentType)) {
-                    System.err.println("ObjectUtils.isEmpty(contentType)");
-                    break;
-                } else {
-                    if(contentType.contains("image/jpeg"))
-                        fileType = "image";
-                    else if(contentType.contains("image/png"))
-                        fileType = "image";
-                    else
-                        break;
-                }
+                System.err.println("ObjectUtils.isEmpty(contentType) 전 For문 안");
+                fileType = contentType;
+//                if(ObjectUtils.isEmpty(contentType)) {
+//                    System.err.println("ObjectUtils.isEmpty(contentType)");
+//                    break;
+//                } else {
+//                    if(contentType.contains("image/jpeg"))
+//                        fileType = "image";
+//                    else if(contentType.contains("image/png"))
+//                        fileType = "image";
+//                    else {
+//                        System.err.println("ObjectUtils.isEmpty(contentType) break 전" + contentType);
+//                        break;
+//                    }
+//                }
 
                 System.err.println("여기까지 옴2");
                 String orgFilename = multipartFile.getOriginalFilename();
@@ -75,12 +78,12 @@ public class FileService {
                     File saveFile = new File(fileDirPath, savedFilename) ;
                     multipartFile.transferTo(saveFile);
                     
-                    if (checkImageType(saveFile)) {
-                        FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + savedFilename));
-                        Thumbnailator.createThumbnail(initialStream, thumbnail, 1000, 1000);
-                        System.err.println("여기까지 옴3");
-                        thumbnail.close();
-                    }
+//                    if (checkImageType(saveFile)) {
+//                        FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + savedFilename));
+//                        Thumbnailator.createThumbnail(initialStream, thumbnail, 1000, 1000);
+//                        System.err.println("여기까지 옴3");
+//                        thumbnail.close();
+//                    }
 
 
                     FileEntity fileEntity = FileEntity.builder()
@@ -90,7 +93,7 @@ public class FileService {
                         .fileType(fileType)
                         .build();
 
-                    System.err.println("여기까지 옴4");
+                    System.err.println("여기까지 옴4" + fileEntity.getOrgFileName());
                     fileList.add(fileEntity);
 
                 } catch(Exception e) {
