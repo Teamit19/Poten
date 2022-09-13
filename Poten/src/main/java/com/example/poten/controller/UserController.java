@@ -66,6 +66,18 @@ public class UserController {
 
     }
 
+    @ApiOperation(value = "현재 로그인 회원 정보 조회")
+    @GetMapping("")
+    public ResponseEntity<?> getMe(HttpServletRequest request) throws LoginException {
+        log.info("회원정보 조회");
+
+        User loginUser = userService.getLoginUser(request);
+        log.info("현재 로그인한 사용자"+ loginUser.getEmail());
+
+        return ResponseEntity.ok(loginUser.toResponse());
+
+    }
+
 
 }
 

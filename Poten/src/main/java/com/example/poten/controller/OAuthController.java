@@ -26,13 +26,12 @@ public class OAuthController {
             , @ApiResponse(code = 400, message = "카카오 로그인 실패")
     })
     @ResponseBody
-    @GetMapping("/kakao")
-    public ResponseEntity<?> kakaoCallback(@RequestParam String code, HttpServletRequest request) {
-        SessionResponse sessionResponse = userService.kakaoLogin(code, request);
+    @GetMapping("/kakao/{token}")
+    public ResponseEntity<?> kakaoCallback(@PathVariable String token, HttpServletRequest request) {
 
+        SessionResponse sessionResponse = userService.kakaoLogin(token, request);
         return ResponseEntity.ok(sessionResponse);
-
-
     }
+
 
 }

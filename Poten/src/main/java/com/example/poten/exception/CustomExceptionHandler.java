@@ -16,7 +16,7 @@ public class CustomExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> otherExHandle(Exception e) {
-        log.error("예외처리 하지 않은 예외 발생 : 핸들러 작동" + e.getMessage());
+        log.error("예외처리 하지 않은 예외 발생 : 핸들러 작동"+e.getMessage());
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 

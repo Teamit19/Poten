@@ -94,7 +94,7 @@ public class OAuthService {
     }
 
     //토큰을 통해 사용자 정보 가져오기
-    private KakaoUserInfo getUserInfoByToken(String accessToken) {
+    public KakaoUserInfo getUserInfoByToken(String accessToken) {
         // HttpHeader 오브젝트 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
