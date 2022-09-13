@@ -56,7 +56,7 @@ public class ClubController {
         return t;
     }
     @ApiOperation(value = "안드로이드테스트")
-    @PostMapping("/test")
+    @PostMapping("/test2")
     public ResponseEntity postTest(@RequestBody TestDto testDto) throws Exception {
         List<FileEntity> picsToFileEnity = fileService.parseFileInfo(testDto.getPics());    // FileEntity로 변환
         test = testDto;
@@ -66,7 +66,7 @@ public class ClubController {
     }
 
     @ApiOperation(value = "안드로이드테스트")
-    @GetMapping("/test")
+    @GetMapping("/test2")
     public ResponseEntity getTest(){
 
         return ResponseEntity.ok(test);
