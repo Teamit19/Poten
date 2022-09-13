@@ -7,6 +7,7 @@ import com.example.poten.domain.User;
 import com.example.poten.dto.request.BoolResponse;
 import com.example.poten.dto.request.ClubForm;
 import com.example.poten.dto.response.ClubResponse;
+import com.example.poten.dto.response.Test;
 import com.example.poten.dto.response.UserResponse;
 import com.example.poten.service.ClubService;
 import com.example.poten.service.UserService;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +43,14 @@ public class ClubController {
         log.error("Club Errors = {}", errors);
     }
 
+
+    @PostMapping("/test")
+    @ResponseBody
+    public Test sendTest(@RequestBody HashMap<String, String> param){
+        Test t = new Test("test");
+        System.out.println("test 완료" + param);
+        return t;
+    }
     @ApiOperation(value = "동아리 생성")
     @PostMapping("")
     public ResponseEntity<?> createClub(BindingResult bindingResult, HttpServletRequest request, @Valid @RequestBody ClubForm clubForm) throws LoginException {
