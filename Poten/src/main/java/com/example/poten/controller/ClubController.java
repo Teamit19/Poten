@@ -83,7 +83,8 @@ public class ClubController {
 //            System.out.println("test 2 시작1" + picsToFileEnity.get(0).getOrgFileName());
 //            test.addFile(picsToFileEnity);
 //        }
-        Test t = new Test("test", "test2");
+        Test t = new Test("files/images/35dbb551-8ff1-4892-a3ab-6324850c868f_test.png", "test2");
+        var fileUrl = "files/images/35dbb551-8ff1-4892-a3ab-6324850c868f_test.png";
 
         return ResponseEntity.ok(t);
     }
