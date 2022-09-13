@@ -67,11 +67,15 @@ public class ClubController {
 
     @ApiOperation(value = "안드로이드테스트")
     @PostMapping("/test2")
-    public ResponseEntity<?> postTest(@ModelAttribute @Valid List<MultipartFile> file, TestDto testDto) throws Exception {
-        System.out.println("test 2 시작" + testDto.getPics() + testDto.getContent() + testDto.getContent2());
-        LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-
-
+    public ResponseEntity<?> postTest(@ModelAttribute @Valid MultipartFile pics, TestDto testDto) throws Exception {
+        System.out.println("test 2 시작" + testDto.getContent() + testDto.getContent2() + pics);
+        List<FileEntity> picsToFileEnity = fileService.parseFileInfo(List.of(pics));
+        test = testDto;
+        if(! picsToFileEnity.isEmpty()) {
+            System.out.println("test 2 시작1" + picsToFileEnity.get(0).getOrgFileName());
+        } else {
+            System.out.println("test 2 시작1");
+        }
         //testDto.setPic(uploadFile);
 //        List<FileEntity> picsToFileEnity = fileService.parseFileInfo(List.of(uploadFile));    // FileEntity로 변환
 //        test = testDto;
@@ -79,7 +83,8 @@ public class ClubController {
 //            System.out.println("test 2 시작1" + picsToFileEnity.get(0).getOrgFileName());
 //            test.addFile(picsToFileEnity);
 //        }
-        Test t = new Test("test", "test2");
+        Test t = new Test("files/images/35dbb551-8ff1-4892-a3ab-6324850c868f_test.png", "test2");
+        var fileUrl = "files/images/35dbb551-8ff1-4892-a3ab-6324850c868f_test.png";
 
         return ResponseEntity.ok(t);
     }
