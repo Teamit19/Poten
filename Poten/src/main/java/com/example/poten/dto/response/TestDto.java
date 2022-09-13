@@ -1,11 +1,7 @@
-package com.example.poten.dto;
+package com.example.poten.dto.response;
 
 import com.example.poten.domain.FileEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -15,11 +11,15 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Setter
+@Data
 public class TestDto {
 
     private List<MultipartFile> pics;
+   // private MultipartFile pic;
     private String content;
+    private String content2;
     private List<FileEntity> files;
+
 
     public void addFile(List<FileEntity> files) {
         this.files = files;
