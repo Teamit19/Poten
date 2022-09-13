@@ -1,10 +1,13 @@
 package com.example.poten.controller;
 
-import com.example.poten.domain.*;
-import com.example.poten.dto.TestDto;
+import com.example.poten.domain.Club;
+import com.example.poten.domain.HeartBoard;
+import com.example.poten.domain.HeartClub;
+import com.example.poten.domain.User;
 import com.example.poten.dto.request.BoolResponse;
 import com.example.poten.dto.request.ClubForm;
 import com.example.poten.dto.response.ClubResponse;
+import com.example.poten.dto.response.Test;
 import com.example.poten.dto.response.UserResponse;
 import com.example.poten.service.ClubService;
 import com.example.poten.service.FileService;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +49,14 @@ public class ClubController {
         log.error("Club Errors = {}", errors);
     }
 
+
+    @PostMapping("/test")
+    @ResponseBody
+    public Test sendTest(@RequestBody HashMap<String, String> param){
+        Test t = new Test("test");
+        System.out.println("test 완료" + param);
+        return t;
+    }
     @ApiOperation(value = "안드로이드테스트")
     @PostMapping("/test")
     public ResponseEntity postTest(@RequestBody TestDto testDto) throws Exception {
