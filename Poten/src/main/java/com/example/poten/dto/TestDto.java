@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Setter
 public class TestDto {
 
     private List<MultipartFile> pics;
@@ -22,6 +24,4 @@ public class TestDto {
     public void addFile(List<FileEntity> files) {
         this.files = files;
     }
-
-
 }

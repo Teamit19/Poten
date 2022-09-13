@@ -50,18 +50,22 @@ public class ClubController {
 
     @PostMapping("/test")
     @ResponseBody
-    public Test sendTest(@RequestBody HashMap<String, String> param){
+    public Test sendTest(@ModelAttribute HashMap<String, String> param){
         Test t = new Test("test");
         System.out.println("test 완료" + param);
         return t;
     }
+
     @ApiOperation(value = "안드로이드테스트")
     @PostMapping("/test2")
-    public ResponseEntity postTest(@RequestBody TestDto testDto) throws Exception {
+    public ResponseEntity postTest(@ModelAttribute @Valid TestDto testDto) throws Exception {
+        System.out.println("test 2 시작" + testDto.getPics() + testDto.getContent());
         List<FileEntity> picsToFileEnity = fileService.parseFileInfo(testDto.getPics());    // FileEntity로 변환
         test = testDto;
-        test.addFile(picsToFileEnity);
-
+        if(! picsToFileEnity.isEmpty()) {
+            System.out.println("test 2 시작1" + picsToFileEnity.get(0).getOrgFileName());
+            test.addFile(picsToFileEnity);
+        }
         return ResponseEntity.ok(testDto);
     }
 

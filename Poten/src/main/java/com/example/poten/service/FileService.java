@@ -31,8 +31,9 @@ public class FileService {
     // 파일 저장
     public List<FileEntity> parseFileInfo(List<MultipartFile> files) throws Exception {
         List<FileEntity> fileList = new ArrayList<>();
-
+        System.err.println("여기까지 옴0");
         if (!CollectionUtils.isEmpty(files)) {
+            System.err.println("여기까지 옴1");
             ResourceBundle bundle = ResourceBundle.getBundle("application");
             String fileDirPath = bundle.getString("basefilePath");  // parent 폴더
 
@@ -50,6 +51,7 @@ public class FileService {
                 String contentType = multipartFile.getContentType();
 
                 if(ObjectUtils.isEmpty(contentType)) {
+                    System.err.println("ObjectUtils.isEmpty(contentType)");
                     break;
                 } else {
                     if(contentType.contains("image/jpeg"))
@@ -60,6 +62,7 @@ public class FileService {
                         break;
                 }
 
+                System.err.println("여기까지 옴2");
                 String orgFilename = multipartFile.getOriginalFilename();
                 orgFilename = orgFilename.substring(orgFilename.lastIndexOf("\\") + 1);
 
@@ -75,7 +78,7 @@ public class FileService {
                     if (checkImageType(saveFile)) {
                         FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + savedFilename));
                         Thumbnailator.createThumbnail(initialStream, thumbnail, 1000, 1000);
-
+                        System.err.println("여기까지 옴3");
                         thumbnail.close();
                     }
 
@@ -87,7 +90,7 @@ public class FileService {
                         .fileType(fileType)
                         .build();
 
-
+                    System.err.println("여기까지 옴4");
                     fileList.add(fileEntity);
 
                 } catch(Exception e) {
