@@ -1,14 +1,13 @@
 package com.example.poten.controller;
 
-import com.example.poten.domain.Club;
-import com.example.poten.domain.HeartBoard;
-import com.example.poten.domain.HeartClub;
-import com.example.poten.domain.User;
+import com.example.poten.domain.*;
+import com.example.poten.dto.TestDto;
 import com.example.poten.dto.request.BoolResponse;
 import com.example.poten.dto.request.ClubForm;
 import com.example.poten.dto.response.ClubResponse;
 import com.example.poten.dto.response.UserResponse;
 import com.example.poten.service.ClubService;
+import com.example.poten.service.FileService;
 import com.example.poten.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -32,13 +31,35 @@ public class ClubController {
     private final UserService userService;
     private final ClubService clubService;
 
-    public ClubController(UserService userService, ClubService clubService) {
+    private final FileService fileService;
+
+    private TestDto test;
+
+    public ClubController(UserService userService, ClubService clubService, FileService fileService) {
         this.userService = userService;
         this.clubService = clubService;
+        this.fileService = fileService;
     }
 
     private void logError(List<FieldError> errors) {
         log.error("Club Errors = {}", errors);
+    }
+
+    @ApiOperation(value = "안드로이드테스트")
+    @PostMapping("/test")
+    public ResponseEntity postTest(@RequestBody TestDto testDto) throws Exception {
+        List<FileEntity> picsToFileEnity = fileService.parseFileInfo(testDto.getPics());    // FileEntity로 변환
+        test = testDto;
+        test.addFile(picsToFileEnity);
+
+        return ResponseEntity.ok(testDto);
+    }
+
+    @ApiOperation(value = "안드로이드테스트")
+    @GetMapping("/test")
+    public ResponseEntity getTest(){
+
+        return ResponseEntity.ok(test);
     }
 
     @ApiOperation(value = "동아리 생성")
