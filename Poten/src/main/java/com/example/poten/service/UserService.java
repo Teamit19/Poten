@@ -1,16 +1,17 @@
 package com.example.poten.service;
 
 import com.example.poten.config.SessionManager;
+import com.example.poten.domain.Interest;
 import com.example.poten.domain.User;
 import com.example.poten.dto.auth.KakaoUserInfo;
 import com.example.poten.dto.request.SignUpForm;
 import com.example.poten.dto.response.SessionResponse;
 import com.example.poten.dto.response.UserResponse;
+import com.example.poten.repository.InterestRepository;
 import com.example.poten.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -37,16 +39,31 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(OAuthService oAuthService, SessionManager sessionManager, UserRepository userRepository) {
+    private final InterestRepository interestRepository;
+
+    public UserService(OAuthService oAuthService, SessionManager sessionManager, UserRepository userRepository, InterestRepository interestRepository) {
         this.oAuthService = oAuthService;
         this.sessionManager = sessionManager;
         this.userRepository = userRepository;
+        this.interestRepository = interestRepository;
     }
 
     public void signUp(SignUpForm signUpForm, Long id) {
         Optional<User> user = userRepository.findById(id);
 
         user.get().update(signUpForm);
+
+    }
+
+    public Boolean saveInterest(User loginUser, List<String> interestList) {
+
+        for (String interest : interestList) {
+            Interest newInterest = new Interest(interest, loginUser);
+            interestRepository.save(newInterest);
+
+        }
+
+        return true;
 
     }
 

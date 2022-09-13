@@ -2,6 +2,7 @@ package com.example.poten.controller;
 
 import com.example.poten.config.SessionManager;
 import com.example.poten.domain.User;
+import com.example.poten.dto.request.BoolResponse;
 import com.example.poten.dto.request.SignUpForm;
 import com.example.poten.dto.response.UserResponse;
 import com.example.poten.service.UserService;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -34,6 +37,19 @@ public class UserController {
 
 
         return ResponseEntity.ok(signUpForm);
+
+    }
+
+    @ApiOperation(value = "관심키워드 입력")
+    @PostMapping("/keyword")
+    public ResponseEntity<?> interestKeyword(HttpServletRequest request, @RequestBody Map<String, List<String>> interestMap) throws LoginException {
+        log.info("회원가입 버튼 눌림");
+        User loginUser = userService.getLoginUser(request);
+        List<String> interestList = interestMap.get("interestList");
+
+        Boolean saveResult = userService.saveInterest(loginUser, interestList);
+
+        return ResponseEntity.ok(new BoolResponse(saveResult));
 
     }
 

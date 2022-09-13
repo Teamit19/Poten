@@ -1,13 +1,10 @@
 package com.example.poten.service;
 
-import com.example.poten.domain.Board;
-import com.example.poten.domain.Club;
-import com.example.poten.domain.Comment;
-import com.example.poten.domain.FileEntity;
-import com.example.poten.domain.HeartBoard;
-import com.example.poten.domain.User;
+import com.example.poten.domain.*;
 import com.example.poten.dto.request.CommentForm;
 import com.example.poten.dto.request.BoardForm;
+import com.example.poten.dto.response.BoardResponse;
+import com.example.poten.dto.response.ClubResponse;
 import com.example.poten.exception.BoardException;
 import com.example.poten.exception.ClubException;
 import com.example.poten.exception.CommentException;
@@ -18,6 +15,8 @@ import com.example.poten.repository.ClubRepository;
 import com.example.poten.repository.CommentRepository;
 import com.example.poten.repository.HeartBoardRepository;
 import com.example.poten.repository.UserRepository;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -83,6 +82,18 @@ public class BoardService {
     // 피드 모두 조회 (by 동아리Id)
     public List<Board> findBoardByClubId(Club club){
         List<Board> findFromRepoBoard =  boardRepository.findAllByClub(club);
+        return findFromRepoBoard == null ? Collections.emptyList() : findFromRepoBoard;
+    }
+
+    public List<Board> findBoardByInterest(List<Club> clubList){
+        List<Board> findFromRepoBoard = new ArrayList<>();
+
+        for(Club club : clubList) {
+            findFromRepoBoard.addAll(boardRepository.findAllByClub(club));
+        }
+
+
+
         return findFromRepoBoard == null ? Collections.emptyList() : findFromRepoBoard;
     }
 

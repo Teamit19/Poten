@@ -43,7 +43,7 @@ public class ClubController {
 
     @ApiOperation(value = "동아리 생성")
     @PostMapping("")
-    public ResponseEntity<?> createClub(BindingResult bindingResult, HttpServletRequest request, @Valid @RequestBody ClubForm clubForm) throws LoginException {
+    public ResponseEntity<?> createClub(HttpServletRequest request, @Valid @RequestBody ClubForm clubForm, BindingResult bindingResult) throws LoginException {
         if (bindingResult.hasErrors()) {
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             logError(fieldErrors);
@@ -86,6 +86,15 @@ public class ClubController {
 
         return ResponseEntity.ok(searchResult);
     }
+
+    @ApiOperation(value = "동아리 추천")
+    @GetMapping("/recommend")
+    public ResponseEntity getInterestclub(HttpServletRequest request) throws LoginException {
+        User loginUser = userService.getLoginUser(request);
+        List<Club> interestResult = clubService.getInterestClub(loginUser);
+
+        return ResponseEntity.ok(interestResult);
+    }
     
 
     @ApiOperation(value = "동아리 조회")
@@ -118,7 +127,7 @@ public class ClubController {
 
     @ApiOperation(value = "동아리 정보 수정")
     @PutMapping("/{clubId}")
-    public ResponseEntity<?> updateClub(BindingResult bindingResult, HttpServletRequest request,  @PathVariable Long clubId, @Valid @RequestBody ClubForm clubForm) throws LoginException {
+    public ResponseEntity<?> updateClub(HttpServletRequest request,  @PathVariable Long clubId, @Valid @RequestBody ClubForm clubForm, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             logError(fieldErrors);

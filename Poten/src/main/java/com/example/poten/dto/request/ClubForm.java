@@ -36,10 +36,10 @@ public class ClubForm {
     private String region;
 
     @NotNull
-    private Integer field;
+    private String field;
 
     @NotNull
-    private Integer activityType;
+    private String activityType;
 
     private List<MultipartFile> profile;
 

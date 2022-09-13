@@ -67,10 +67,13 @@ public class PosterController {
 
     @ApiOperation(value = "공고 하나 조회")
     @GetMapping("/{posterId}")
-    public ResponseEntity<?> getPoster(HttpServletRequest request,  @PathVariable Long posterId) throws LoginException {
-        User loginUser = userService.getLoginUser(request);
+    public ResponseEntity<?> getPoster(HttpServletRequest request,  @PathVariable Long posterId) throws Exception {
+//        User loginUser = userService.getLoginUser(request);
 
         Poster findPoster = posterService.findPosterById(posterId);
+        PosterResponse posterResponse = findPoster.toResponse();
+        log.info("공고조회 return 전 : " + posterResponse.getContent());
+
         return ResponseEntity.ok(findPoster.toResponse());
     }
 

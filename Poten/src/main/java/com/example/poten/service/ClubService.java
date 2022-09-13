@@ -10,6 +10,7 @@ import com.example.poten.exception.UserException;
 import com.example.poten.repository.*;
 
 import javax.transaction.Transactional;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -28,14 +29,15 @@ public class ClubService {
     private final FollowRepository followRepository;
 
     private final FileService fileService;
+    private final InterestRepository interestRepository;
 
-
-    public ClubService(UserRepository userRepository, ClubRepository clubRepository, HeartClubRepository heartClubRepository, FollowRepository followRepository, FileService fileService) {
+    public ClubService(UserRepository userRepository, ClubRepository clubRepository, HeartClubRepository heartClubRepository, FollowRepository followRepository, FileService fileService, InterestRepository interestRepository) {
         this.userRepository = userRepository;
         this.clubRepository = clubRepository;
         this.heartClubRepository = heartClubRepository;
         this.followRepository = followRepository;
         this.fileService = fileService;
+        this.interestRepository = interestRepository;
     }
 
     public Club findByClubId(Long clubId){
@@ -119,10 +121,31 @@ public class ClubService {
         return result;
     }
 
+    /**
+     * 관심 키워드에 따른 추천 동아리
+     */
+    public List<Club> getInterestClub(User loginUser) {
 
-    public Club updateClub(User loginUser, Long clubId, ClubForm form){
+        List<Interest> interestList = interestRepository.findAllByUser(loginUser);
+        List<ClubResponse> result=new ArrayList<>();
+        List<Club> clubList = new ArrayList<>();
+
+
+        for(Interest interest : interestList) {
+            clubList.addAll(clubRepository.findAllByField(interest.getInterest()));
+        }
+
+//        for(Club club : clubList) {
+//            result.add(club.toResponse());
+//        }
+
+        return clubList;
+    }
+
+
+
+    public Club updateClub(User loginUser, Long clubId, ClubForm form) throws Exception{
         User findUser = userRepository.findById(loginUser.getId()).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
-        Long findUserId = findUser.getId();
         Club findClub = clubRepository.findById(clubId).orElseThrow(() -> new ClubException("존재하지 않는 동아리입니다."));
 
         if (loginUser.getId()!=findClub.getManager().getId())  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");

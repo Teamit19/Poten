@@ -1,6 +1,7 @@
 package com.example.poten.dto.response;
 
 import com.example.poten.domain.FileEntity;
+import com.example.poten.domain.Interest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
