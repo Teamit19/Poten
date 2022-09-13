@@ -1,9 +1,7 @@
 package com.example.poten.controller;
 
-import com.example.poten.domain.Club;
-import com.example.poten.domain.HeartBoard;
-import com.example.poten.domain.HeartClub;
-import com.example.poten.domain.User;
+import com.example.poten.domain.*;
+import com.example.poten.dto.TestDto;
 import com.example.poten.dto.request.BoolResponse;
 import com.example.poten.dto.request.ClubForm;
 import com.example.poten.dto.response.ClubResponse;
