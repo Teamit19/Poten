@@ -24,4 +24,6 @@ public class PosterResponse {
 
     private String createdTime;
     private String modifiedTime;
+
+    private Integer dday;
 }

@@ -4,6 +4,8 @@ import com.example.poten.dto.request.BoardForm;
 import com.example.poten.dto.request.PosterForm;
 import com.example.poten.dto.response.PosterResponse;
 import com.sun.istack.NotNull;
+import java.time.LocalDate;
+import java.time.Period;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -58,6 +60,10 @@ public class Poster extends BaseTimeEntity {
     }
 
     public PosterResponse toResponse() {
+        // dday 계산
+        LocalDate now = LocalDate.now();
+        Period period = Period.between(now, deadlineDate.toLocalDate());
+
         return PosterResponse.builder()
             .posterId(id)
             .club(club.toResponse())
@@ -65,6 +71,7 @@ public class Poster extends BaseTimeEntity {
             .title(title)
             .content(content)
             .deadlineDate(deadlineDate.toString())
+            .dday(period.getDays())
             .createdTime(getCreatedTime().toString())
             .modifiedTime(getModifiedTime().toString())
             .build();
