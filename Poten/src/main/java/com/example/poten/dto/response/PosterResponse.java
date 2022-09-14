@@ -20,7 +20,7 @@ public class PosterResponse {
     private String title;
     private String content;
     private String deadlineDate;
-   // private List<FileEntity> posterImg; // <<TODO>>
+    private FileResponse pics;
 
     private String createdTime;
     private String modifiedTime;

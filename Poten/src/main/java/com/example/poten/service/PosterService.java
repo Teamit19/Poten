@@ -71,6 +71,11 @@ public class PosterService {
         return findPostersFromRepo == null ? Collections.emptyList() : findPostersFromRepo;
     }
 
+    public List<Poster> findPosterAll(){
+        List<Poster> findPostersFromRepo = posterRepository.findAll();
+        return findPostersFromRepo == null ? Collections.emptyList() : findPostersFromRepo;
+    }
+
     // 검색 - 공고
     public List<PosterResponse> searchPoster(String keyword){
         List<Poster> posterList=new ArrayList<>();

@@ -77,6 +77,17 @@ public class PosterController {
         return ResponseEntity.ok(findPoster.toResponse());
     }
 
+    @ApiOperation(value = "공고 모두 조회")
+    @GetMapping("/all")
+    public ResponseEntity<?> getPosterAll() throws Exception {
+        List<Poster> posterEntityList = posterService.findPosterAll();
+        // DTO로 변환
+        List<PosterResponse> posterResponseList = new ArrayList<>();
+        posterEntityList.forEach(b -> posterResponseList.add(b.toResponse()));
+
+        return ResponseEntity.ok(new PosterResponseList(posterResponseList));
+    }
+
     @ApiOperation(value = "동아리 공고 모두 조회")
     @GetMapping("/club/{clubId}")
     public ResponseEntity<?> getPosterByClub(HttpServletRequest request, @PathVariable Long clubId) throws LoginException {

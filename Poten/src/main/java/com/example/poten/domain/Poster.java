@@ -2,6 +2,7 @@ package com.example.poten.domain;
 
 import com.example.poten.dto.request.BoardForm;
 import com.example.poten.dto.request.PosterForm;
+import com.example.poten.dto.response.FileResponse;
 import com.example.poten.dto.response.PosterResponse;
 import com.sun.istack.NotNull;
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import java.time.Period;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -50,13 +52,13 @@ public class Poster extends BaseTimeEntity {
 
     @Builder
     public Poster(Long id, Club club, User user, String title, String content,
-        LocalDateTime deadlineDate, List<FileEntity> posterImg) {
+                  LocalDateTime deadlineDate, List<FileEntity> posterImg) {
         this.club = club;
         this.user = user;
         this.title = title;
         this.content = content;
         this.deadlineDate = deadlineDate;
-        this.posterImg = posterImg;
+        this.posterImg = new ArrayList<FileEntity>();
     }
 
     public PosterResponse toResponse() {
@@ -64,17 +66,22 @@ public class Poster extends BaseTimeEntity {
         LocalDate now = LocalDate.now();
         Period period = Period.between(now, deadlineDate.toLocalDate());
 
+        var FileResponse = new FileResponse();
+        if (! posterImg.isEmpty()) FileResponse = posterImg.get(0).toResponse();
+
+
         return PosterResponse.builder()
-            .posterId(id)
-            .club(club.toResponse())
-            .writer(user.toResponse())
-            .title(title)
-            .content(content)
-            .deadlineDate(deadlineDate.toString())
-            .dday(period.getDays())
-            .createdTime(getCreatedTime().toString())
-            .modifiedTime(getModifiedTime().toString())
-            .build();
+                .posterId(id)
+                .club(club.toResponse())
+                .writer(user.toResponse())
+                .title(title)
+                .content(content)
+                .pics(FileResponse)
+                .deadlineDate(deadlineDate.toString())
+                .dday(period.getDays())
+                .createdTime(getCreatedTime().toString())
+                .modifiedTime(getModifiedTime().toString())
+                .build();
     }
 
     // 공고 글 수정하기
