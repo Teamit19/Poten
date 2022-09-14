@@ -52,7 +52,10 @@ public class PosterService {
         if (loginUser.getId()!=findClub.getManager().getId())  throw new ClubException("해당 유저는 동아리 부장이 아닙니다.");
         
         List<FileEntity> picsToFileEnity = fileService.parseFileInfo(form.getPosterImg());    // FileEntity로 변환
-        Poster savedPoster = posterRepository.save(form.toPoster(findUserFromRepo, findClub, picsToFileEnity));
+
+        Poster savedPoster =form.toPoster(findUserFromRepo, findClub, picsToFileEnity);
+        savedPoster.setPosterImg(picsToFileEnity);
+        posterRepository.save(savedPoster);
         return savedPoster;
     }
 

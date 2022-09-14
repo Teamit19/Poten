@@ -58,10 +58,11 @@ public class BoardController {
      */
     @ApiOperation(value = "피드 생성")
     @PostMapping("/upload")
-    public ResponseEntity<?> saveBoard(HttpServletRequest request, @ModelAttribute @Valid MultipartFile pics, BoardForm boardForm, BindingResult bindingResult)
+    public ResponseEntity<?> saveBoard(HttpServletRequest request, @ModelAttribute @Valid BoardForm boardForm, BindingResult bindingResult)
         throws Exception {
         log.error("들어옴");
-        System.out.println("test 2 시작" + pics);
+//        System.out.println("test 2 시작 pics" + pics);
+        System.out.println("test 2 시작 boardForm" + boardForm.getPics().toString());
         if (bindingResult.hasErrors()) {
             log.error("바인딩 에러");
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -75,7 +76,8 @@ public class BoardController {
         log.error("333");
         Board savedBoard = boardService.saveBoard(loginUser, userClub, boardForm);
         log.error("44444");
-        return ResponseEntity.ok(savedBoard.toResponse());
+//        return ResponseEntity.ok(savedBoard.toResponse());
+        return ResponseEntity.ok(savedBoard);
     }
 
     @ApiOperation(value = "피드 모두 조회")

@@ -4,6 +4,7 @@ import com.example.poten.dto.request.BoardForm;
 import com.example.poten.dto.request.PosterForm;
 import com.example.poten.dto.response.FileResponse;
 import com.example.poten.dto.response.PosterResponse;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import java.time.LocalDate;
 import java.time.Period;
@@ -22,6 +23,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.extern.java.Log;
+import org.springframework.validation.FieldError;
 
 @Entity
 @NoArgsConstructor
@@ -41,6 +44,7 @@ public class Poster extends BaseTimeEntity {
     @ManyToOne
     @NotNull
     @JoinColumn(name="userId")
+    @JsonIgnore
     private User user;
 
     private String title;
@@ -61,24 +65,27 @@ public class Poster extends BaseTimeEntity {
         this.posterImg = new ArrayList<FileEntity>();
     }
 
+
     public PosterResponse toResponse() {
         // dday 계산
         LocalDate now = LocalDate.now();
-        Period period = Period.between(now, deadlineDate.toLocalDate());
+        if (this.deadlineDate != null ) {
+            Period period = Period.between(now, deadlineDate.toLocalDate());
+        }
 
         var FileResponse = new FileResponse();
         if (! posterImg.isEmpty()) FileResponse = posterImg.get(0).toResponse();
 
-
         return PosterResponse.builder()
                 .posterId(id)
                 .club(club.toResponse())
-                .writer(user.toResponse())
+//                .writer(user.toResponse())
                 .title(title)
                 .content(content)
                 .pics(FileResponse)
                 .deadlineDate(deadlineDate.toString())
-                .dday(period.getDays())
+//                .dday(period.getDays())
+                .dday(1)
                 .createdTime(getCreatedTime().toString())
                 .modifiedTime(getModifiedTime().toString())
                 .build();
@@ -88,5 +95,9 @@ public class Poster extends BaseTimeEntity {
     public void update(PosterForm form, List<FileEntity> pics) {
         this.content = form.getContent();
         this.posterImg = pics;
+    }
+
+    public void setPosterImg(List<FileEntity> posterImg) {
+        this.posterImg = posterImg;
     }
 }
