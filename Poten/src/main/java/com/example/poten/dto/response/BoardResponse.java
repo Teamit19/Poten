@@ -23,6 +23,9 @@ public class BoardResponse {
     private List<CommentResponse> comment;
     private FileResponse pics;  // <<TODO>>
 
+    private Integer heartsNum;
+    private Integer commentsNum;
+
     private String createdTime;
     private String modifiedTime;
 }

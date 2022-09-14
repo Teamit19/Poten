@@ -25,5 +25,9 @@ public class ClubResponse {
     private List<UserResponse> members;
     private List<UserResponse> waitings;
 
+    private Integer followersNum;
+    private Integer heartsNum;
+    private Integer membersNum;
+
     private String createdTime;
 }

@@ -107,8 +107,8 @@ public class Club extends BaseTimeEntity {
 //        List<PosterResponse> postersResponses = new ArrayList<>();
 //        posters.forEach(p -> postersResponses.add(p.toResponse()));
 //
-//        List<UserResponse> membersResponses = new ArrayList<>();
-//        members.forEach(m -> membersResponses.add(m.toResponse()));
+        List<UserResponse> membersResponses = new ArrayList<>();
+        members.forEach(m -> membersResponses.add(m.toResponse()));
 //
 //        List<UserResponse> waitingsResponses = new ArrayList<>();
 //        waitings.forEach(m -> waitingsResponses.add(m.toResponse()));
@@ -121,10 +121,13 @@ public class Club extends BaseTimeEntity {
                 .region(region)
                 .field(field)
                 .activityType(activityType)
+                .followersNum(following.size())
+                .heartsNum(hearts.size())
+                .membersNum(members.size())
 //                .follows(followsResponses)
 //                .hearts(heartsResponses)
 //                .posters(postersResponses)
-//                .members(membersResponses)
+                .members(membersResponses)
 //                .waitings(waitingsResponses)
                 .createdTime(getCreatedTime().toString())
                 .build();

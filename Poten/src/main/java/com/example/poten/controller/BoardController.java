@@ -76,8 +76,8 @@ public class BoardController {
         log.error("333");
         Board savedBoard = boardService.saveBoard(loginUser, userClub, boardForm);
         log.error("44444");
-//        return ResponseEntity.ok(savedBoard.toResponse());
-        return ResponseEntity.ok(savedBoard);
+        return ResponseEntity.ok(savedBoard.toResponse());
+//        return ResponseEntity.ok(savedBoard);
     }
 
     @ApiOperation(value = "피드 모두 조회")

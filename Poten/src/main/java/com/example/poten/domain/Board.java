@@ -78,6 +78,8 @@ public class Board extends BaseTimeEntity {
             .content(content)
             .hearts(heartsResponses)
             .comment(commentResponses)
+            .heartsNum(hearts.size())
+            .commentsNum(comment.size())
             .pics(FileResponse)
             .createdTime(getCreatedTime().toString())
             .modifiedTime(getModifiedTime().toString())
