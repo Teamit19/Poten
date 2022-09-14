@@ -24,12 +24,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -49,9 +51,14 @@ public class PosterController {
         log.error("Poster Errors = {}", errors);
     }
 
+
+//        public ResponseEntity<?> savePoster(HttpServletRequest request, @PathVariable Long clubId, PosterForm posterForm, BindingResult bindingResult) throws Exception {
+
     @ApiOperation(value = "공고 생성")
     @PostMapping("/{clubId}/upload")
-    public ResponseEntity<?> savePoster(HttpServletRequest request, @Valid @RequestBody PosterForm posterForm, @PathVariable Long clubId,BindingResult bindingResult) throws Exception {
+        public ResponseEntity<?> savePoster(HttpServletRequest request, @PathVariable Long clubId, @ModelAttribute @Valid PosterForm posterForm, BindingResult bindingResult) throws Exception {
+        log.error("들어옴");
+//        public ResponseEntity<?> savePoster(HttpServletRequest request, @Valid @RequestBody PosterForm posterForm, @PathVariable Long clubId,BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             logError(fieldErrors);
@@ -62,7 +69,11 @@ public class PosterController {
         Club userClub = clubService.findByClubId(clubId);
 //        Club userClub = clubService.findByClubId(posterForm.getClubId());
         Poster savedPoster = posterService.savePoster(loginUser, userClub, posterForm);
-        return ResponseEntity.ok(savedPoster.toResponse());
+        log.error("savedPoster!! " + savedPoster);
+
+//        PosterResponse result = savedPoster.toResponse();
+//        log.error("result!! " + result);
+        return ResponseEntity.ok(savedPoster);
     }
 
     @ApiOperation(value = "공고 하나 조회")
