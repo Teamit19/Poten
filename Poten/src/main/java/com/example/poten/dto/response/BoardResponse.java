@@ -21,7 +21,7 @@ public class BoardResponse {
 
     private List<HeartBoardResponse> hearts;
     private List<CommentResponse> comment;
-//    private List<FileEntity> pics;  // <<TODO>>
+    private FileResponse pics;  // <<TODO>>
 
     private String createdTime;
     private String modifiedTime;

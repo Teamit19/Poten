@@ -3,6 +3,7 @@ package com.example.poten.domain;
 import com.example.poten.dto.request.BoardForm;
 import com.example.poten.dto.response.BoardResponse;
 import com.example.poten.dto.response.CommentResponse;
+import com.example.poten.dto.response.FileResponse;
 import com.example.poten.dto.response.HeartBoardResponse;
 import com.example.poten.dto.response.HeartClubResponse;
 import com.sun.istack.NotNull;
@@ -60,11 +61,15 @@ public class Board extends BaseTimeEntity {
     public BoardResponse toResponse(){
         // 리스트 형식인 필드를  DTO로 변환
         List<HeartBoardResponse> heartsResponses = new ArrayList<>();
-        if (! heartsResponses.isEmpty()) hearts.forEach(h -> heartsResponses.add(h.toResponse()));
+        if (! hearts.isEmpty()) hearts.forEach(h -> heartsResponses.add(h.toResponse()));
 
 
         List<CommentResponse> commentResponses = new ArrayList<>();
-        if (! commentResponses.isEmpty())  comment.forEach(h -> commentResponses.add(h.toResponse()));
+        if (! comment.isEmpty())  comment.forEach(h -> commentResponses.add(h.toResponse()));
+
+        var FileResponse = new FileResponse();
+        if (! pics.isEmpty()) FileResponse = pics.get(0).toResponse();
+
 
         return BoardResponse.builder()
             .boardId(id)
@@ -73,6 +78,7 @@ public class Board extends BaseTimeEntity {
             .content(content)
             .hearts(heartsResponses)
             .comment(commentResponses)
+            .pics(FileResponse)
             .createdTime(getCreatedTime().toString())
             .modifiedTime(getModifiedTime().toString())
             .build();
@@ -84,4 +90,7 @@ public class Board extends BaseTimeEntity {
         this.pics = pics;
     }
 
+    public void setPics(List<FileEntity> pics) {
+        this.pics = pics;
+    }
 }

@@ -59,9 +59,12 @@ public class BoardService {
         if(! CollectionUtils.isEmpty(findClubs) && !findClubs.contains(userClub)) throw new ClubException("해당 유저는 동아리 소속이 아닙니다.");
 
         List<FileEntity> picsToFileEnity = fileService.parseFileInfo(form.getPics());    // FileEntity로 변환
-        Board savedBoard = boardRepository.save(form.toBoard(findFromRepoUser, userClub, picsToFileEnity));
 
-        return savedBoard;
+        Board newBoard = form.toBoard(findFromRepoUser, userClub, picsToFileEnity);
+        newBoard.setPics(picsToFileEnity);
+        boardRepository.save(newBoard);
+
+        return newBoard;
     }
 
     /**

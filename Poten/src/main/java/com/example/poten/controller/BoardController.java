@@ -26,12 +26,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -56,16 +58,17 @@ public class BoardController {
      */
     @ApiOperation(value = "피드 생성")
     @PostMapping("/upload")
-    public ResponseEntity<?> saveBoard(HttpServletRequest request, @RequestBody BoardForm boardForm, BindingResult bindingResult)
+    public ResponseEntity<?> saveBoard(HttpServletRequest request, @ModelAttribute @Valid MultipartFile pics, BoardForm boardForm, BindingResult bindingResult)
         throws Exception {
         log.error("들어옴");
+        System.out.println("test 2 시작" + pics);
         if (bindingResult.hasErrors()) {
             log.error("바인딩 에러");
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             logError(fieldErrors);
             new ResponseEntity<>(fieldErrors, HttpStatus.BAD_REQUEST);
         }
-        log.error("111");
+        log.error("111" + boardForm.getClubId() + boardForm.getContent() );
         User loginUser = userService.getLoginUser(request) ;
         log.error("222");
         Club userClub = clubService.findByClubId(boardForm.getClubId());

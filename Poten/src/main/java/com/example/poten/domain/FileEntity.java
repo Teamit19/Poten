@@ -1,5 +1,6 @@
 package com.example.poten.domain;
 
+import com.example.poten.dto.response.FileResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,4 +34,9 @@ public class FileEntity {
         this.fileSize = fileSize;
     }
 
+    public FileResponse toResponse() {
+        return FileResponse.builder()
+            .fileName(savedFileName)
+            .build();
+    }
 }
