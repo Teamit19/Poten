@@ -117,13 +117,28 @@ public class BoardController {
         return ResponseEntity.ok(new BoardResponseList(boardResponseList));
     }
 
+    @ApiOperation(value = "팔로잉한 동아리 피드 조회")
+    @GetMapping("/follows")
+    public ResponseEntity<?> getBoardByFollow(HttpServletRequest request) throws LoginException {
+        User loginUser = userService.getLoginUser(request);
+
+        List<Club> clubList = clubService.findFollowingByUser(loginUser);
+        List<Board> boardEntityList = boardService.findBoardByClubList(clubList);
+
+        // DTO로 변환
+        List<BoardResponse> boardResponseList = new ArrayList<>();
+        boardEntityList.forEach(b -> boardResponseList.add(b.toResponse()));
+
+        return ResponseEntity.ok(new BoardResponseList(boardResponseList));
+    }
+
     @ApiOperation(value = "추천 피드 조회")
     @GetMapping("/interest")
     public ResponseEntity<?> getBoardByInterest(HttpServletRequest request) throws LoginException {
         User loginUser = userService.getLoginUser(request);
 
         List<Club> clubList = clubService.getInterestClub(loginUser);
-        List<Board> boardEntityList = boardService.findBoardByInterest(clubList);
+        List<Board> boardEntityList = boardService.findBoardByClubList(clubList);
 
         // DTO로 변환
         List<BoardResponse> boardResponseList = new ArrayList<>();

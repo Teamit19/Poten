@@ -93,19 +93,18 @@ public class BoardService {
         List<Board> findFromRepoBoard =  boardRepository.findAllByClub(club);
         return findFromRepoBoard == null ? Collections.emptyList() : findFromRepoBoard;
     }
-
-    public List<Board> findBoardByInterest(List<Club> clubList){
+    
+    // 피드 모두 조회 (by 동아리 리스트)
+    public List<Board> findBoardByClubList(List<Club> clubList){
         List<Board> findFromRepoBoard = new ArrayList<>();
 
         for(Club club : clubList) {
             findFromRepoBoard.addAll(boardRepository.findAllByClub(club));
         }
-
-
-
+        
         return findFromRepoBoard == null ? Collections.emptyList() : findFromRepoBoard;
     }
-
+    
 
     /**
      * 피드 수정

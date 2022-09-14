@@ -277,18 +277,17 @@ public class ClubService {
     /**
      *  사용자가 팔로잉하는 동아리 목록 조회
      */
-    public List<ClubResponse> findFollowingByUser(User loginUser, Long clubId){
+    public List<Club> findFollowingByUser(User loginUser){
         User findUser = userRepository.findById(loginUser.getId()).orElseThrow(() -> new UserException("등록된 회원이 없습니다."));
         List<Follow> followingList = followRepository.findAllByFollower(findUser);
 
-        List<ClubResponse> followingDtoList = new ArrayList<>();
+        List<Club> followingDtoList = new ArrayList<>();
         for(Follow follow : followingList) {
-            followingDtoList.add(follow.getFollowing().toResponse());
+            followingDtoList.add(follow.getFollowing());
         }
 
         return followingDtoList;
     }
-
     /**
      *  동아리 부장 넘기기
      */
