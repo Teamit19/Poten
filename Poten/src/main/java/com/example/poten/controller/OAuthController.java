@@ -33,5 +33,15 @@ public class OAuthController {
         return ResponseEntity.ok(sessionResponse);
     }
 
+    @ResponseBody
+    @GetMapping("/kakao")
+    public ResponseEntity<?> kakaoCallback2(@RequestParam String code, HttpServletRequest request) {
+        SessionResponse sessionResponse = userService.kakaoLogin(code, request);
+
+        return ResponseEntity.ok(sessionResponse);
+
+
+    }
+
 
 }
