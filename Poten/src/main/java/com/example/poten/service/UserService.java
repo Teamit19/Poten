@@ -48,10 +48,12 @@ public class UserService {
         this.interestRepository = interestRepository;
     }
 
-    public void signUp(SignUpForm signUpForm, Long id) {
+    public Boolean signUp(SignUpForm signUpForm, Long id) {
         Optional<User> user = userRepository.findById(id);
 
         user.get().update(signUpForm);
+
+        return true;
 
     }
 
