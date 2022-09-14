@@ -5,6 +5,7 @@ import com.example.poten.dto.auth.KakaoUserInfo;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +20,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class OAuthService {
 
@@ -30,6 +32,7 @@ public class OAuthService {
     public KakaoUserInfo getUserInfo(String code) {
         String token = getKakaoToken(code);
         KakaoUserInfo userInfo = getUserInfoByToken(token);
+        log.info("getuserinfo in oauthservice" + userInfo);
 
         return userInfo;
     }
@@ -123,14 +126,14 @@ public class OAuthService {
         if (hasEmail) {
             id = body.getAsJsonObject().get("id").getAsLong();
             email = body.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
-            ageRange = body.getAsJsonObject().get("kakao_account").getAsJsonObject().get("age_range").getAsString();
-            gender = body.getAsJsonObject().get("kakao_account").getAsJsonObject().get("gender").getAsString();
+//            ageRange = body.getAsJsonObject().get("kakao_account").getAsJsonObject().get("age_range").getAsString();
+//            gender = body.getAsJsonObject().get("kakao_account").getAsJsonObject().get("gender").getAsString();
         }
 
         System.out.println("response body : " + body);
 
         //가져온 사용자 정보를 객체로 만들어서 반환
-        return new KakaoUserInfo(id, email, ageRange, gender);
+        return new KakaoUserInfo(id, email, "20~29", "female");
     }
 
 
