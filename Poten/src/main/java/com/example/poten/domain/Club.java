@@ -5,6 +5,7 @@ import com.example.poten.dto.response.ClubResponse;
 import com.example.poten.dto.response.HeartClubResponse;
 import com.example.poten.dto.response.PosterResponse;
 import com.example.poten.dto.response.UserResponse;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 import java.util.ArrayList;
@@ -39,27 +40,36 @@ public class Club extends BaseTimeEntity {
 
     private String activityType;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<FileEntity> profile;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<FileEntity> background;
 
+
+    @JsonIgnore
     @OneToMany(mappedBy = "following", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Follow> following;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<HeartClub> hearts;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Board> boards;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Poster> posters;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<User> members;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<User> waitings;
 
@@ -88,20 +98,20 @@ public class Club extends BaseTimeEntity {
     /* Entity -> DTO */
     public ClubResponse toResponse() {
         // 리스트 형식인 필드를  DTO로 변환
-        List<UserResponse> followsResponses = new ArrayList<>();
-        following.forEach(f -> followsResponses.add(f.getFollower().toResponse()));
-
-        List<HeartClubResponse> heartsResponses = new ArrayList<>();
-        hearts.forEach(h -> heartsResponses.add(h.toResponse()));
-
-        List<PosterResponse> postersResponses = new ArrayList<>();
-        posters.forEach(p -> postersResponses.add(p.toResponse()));
-
-        List<UserResponse> membersResponses = new ArrayList<>();
-        members.forEach(m -> membersResponses.add(m.toResponse()));
-
-        List<UserResponse> waitingsResponses = new ArrayList<>();
-        waitings.forEach(m -> waitingsResponses.add(m.toResponse()));
+//        List<UserResponse> followsResponses = new ArrayList<>();
+//        following.forEach(f -> followsResponses.add(f.getFollower().toResponse()));
+//
+//        List<HeartClubResponse> heartsResponses = new ArrayList<>();
+//        hearts.forEach(h -> heartsResponses.add(h.toResponse()));
+//
+//        List<PosterResponse> postersResponses = new ArrayList<>();
+//        posters.forEach(p -> postersResponses.add(p.toResponse()));
+//
+//        List<UserResponse> membersResponses = new ArrayList<>();
+//        members.forEach(m -> membersResponses.add(m.toResponse()));
+//
+//        List<UserResponse> waitingsResponses = new ArrayList<>();
+//        waitings.forEach(m -> waitingsResponses.add(m.toResponse()));
 
         return ClubResponse.builder()
                 .clubId(id)
@@ -111,11 +121,11 @@ public class Club extends BaseTimeEntity {
                 .region(region)
                 .field(field)
                 .activityType(activityType)
-                .follows(followsResponses)
-                .hearts(heartsResponses)
-                .posters(postersResponses)
-                .members(membersResponses)
-                .waitings(waitingsResponses)
+//                .follows(followsResponses)
+//                .hearts(heartsResponses)
+//                .posters(postersResponses)
+//                .members(membersResponses)
+//                .waitings(waitingsResponses)
                 .createdTime(getCreatedTime().toString())
                 .build();
     }
