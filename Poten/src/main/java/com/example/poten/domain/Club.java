@@ -40,6 +40,14 @@ public class Club extends BaseTimeEntity {
 
     private String activityType;
 
+    public void setProfile(List<FileEntity> profile) {
+        this.profile = profile;
+    }
+
+    public void setBackground(List<FileEntity> background) {
+        this.background = background;
+    }
+
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<FileEntity> profile;

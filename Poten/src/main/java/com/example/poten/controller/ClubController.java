@@ -111,7 +111,8 @@ public class ClubController {
 
     @ApiOperation(value = "동아리 생성")
     @PostMapping("")
-    public ResponseEntity<?> createClub(HttpServletRequest request, @Valid @RequestBody ClubForm clubForm, BindingResult bindingResult) throws LoginException {
+    public ResponseEntity<?> createClub(HttpServletRequest request, @ModelAttribute @Valid  ClubForm clubForm, BindingResult bindingResult)
+        throws Exception {
         if (bindingResult.hasErrors()) {
             final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             logError(fieldErrors);

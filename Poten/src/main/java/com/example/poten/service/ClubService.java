@@ -48,10 +48,14 @@ public class ClubService {
     /**
      *  동아리 생성
      */
-    public Club saveClub(User user, ClubForm clubForm) {
+    public Club saveClub(User user, ClubForm clubForm) throws Exception {
 
         Club saveClub = clubForm.toClub(user);
         saveClub.addMember(user);
+
+        List<FileEntity> picsToFileEnity = fileService.parseFileInfo(clubForm.getProfile());    // FileEntity로 변환
+        saveClub.setProfile(picsToFileEnity);
+
         clubRepository.save(saveClub);
 
         return saveClub;
