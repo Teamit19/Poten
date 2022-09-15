@@ -96,7 +96,7 @@ public class PosterService {
         Comparator<Poster> cp=new Comparator<Poster>() {
             @Override
             public int compare(Poster o1, Poster o2) {
-                return o1.getDeadlineDate().compareTo(o2.getDeadlineDate());
+                return o2.getDeadlineDate().compareTo(o1.getDeadlineDate());
 
             }
         };
