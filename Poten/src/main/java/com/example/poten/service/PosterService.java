@@ -14,8 +14,10 @@ import com.example.poten.repository.ClubRepository;
 import com.example.poten.repository.PosterRepository;
 import com.example.poten.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -84,14 +86,29 @@ public class PosterService {
         List<Poster> posterList=new ArrayList<>();
         List<PosterResponse> result=new ArrayList<>();
 
-        List<Club> searchClubList = clubRepository.findAllByNameContaining(keyword);
+
+        List<Club> searchClubList = clubRepository.findAllByClubDescContaining(keyword);
 
         for(Club club : searchClubList) {
             posterList.addAll(posterRepository.findAllByClubOrderByDeadlineDate(club));
         }
+
+        Comparator<Poster> cp=new Comparator<Poster>() {
+            @Override
+            public int compare(Poster o1, Poster o2) {
+                return o1.getDeadlineDate().compareTo(o2.getDeadlineDate());
+
+            }
+        };
+
+        Collections.sort(posterList, cp);
+
         for(Poster poster : posterList) {
             result.add(poster.toResponse());
         }
+
+
+
 
         return result;
     }
