@@ -70,7 +70,7 @@ public class PosterService {
 
     // 동아리의 공고 모두 조회 (by 동아리id)
     public List<Poster> findPosterByClubId(Club club){
-        List<Poster> findPostersFromRepo = posterRepository.findAllByClub(club);
+        List<Poster> findPostersFromRepo = posterRepository.findAllByClubOrderByDeadlineDate(club);
         return findPostersFromRepo == null ? Collections.emptyList() : findPostersFromRepo;
     }
 
@@ -87,7 +87,7 @@ public class PosterService {
         List<Club> searchClubList = clubRepository.findAllByNameContaining(keyword);
 
         for(Club club : searchClubList) {
-            posterList.addAll(posterRepository.findAllByClub(club));
+            posterList.addAll(posterRepository.findAllByClubOrderByDeadlineDate(club));
         }
         for(Poster poster : posterList) {
             result.add(poster.toResponse());

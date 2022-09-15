@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PosterRepository extends JpaRepository<Poster, Long> {
-    List<Poster> findAllByClub(Club club);
+    List<Poster> findAllByClubOrderByDeadlineDate(Club club);
 
     List<Poster> findAllByOrderByDeadlineDate();
 
