@@ -1,12 +1,9 @@
 package com.example.poten.controller;
 
 import com.example.poten.domain.*;
-import com.example.poten.dto.response.TestDto;
+import com.example.poten.dto.response.*;
 import com.example.poten.dto.request.BoolResponse;
 import com.example.poten.dto.request.ClubForm;
-import com.example.poten.dto.response.ClubResponse;
-import com.example.poten.dto.response.Test;
-import com.example.poten.dto.response.UserResponse;
 import com.example.poten.service.ClubService;
 import com.example.poten.service.FileService;
 import com.example.poten.service.UserService;
@@ -153,7 +150,7 @@ public class ClubController {
         String keyword = keywordMap.get("keyword");
         List<ClubResponse> searchResult = clubService.searchClub(keyword);
 
-        return ResponseEntity.ok(searchResult);
+        return ResponseEntity.ok(new ClubResponseList(searchResult));
     }
 
     @ApiOperation(value = "동아리 추천")
