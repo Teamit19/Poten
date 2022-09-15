@@ -69,8 +69,9 @@ public class Poster extends BaseTimeEntity {
     public PosterResponse toResponse() {
         // dday 계산
         LocalDate now = LocalDate.now();
+        Period period = Period.between(now, now);
         if (this.deadlineDate != null ) {
-            Period period = Period.between(now, deadlineDate.toLocalDate());
+            period = Period.between(now, deadlineDate.toLocalDate());
         }
 
         var FileResponse = new FileResponse();
@@ -84,8 +85,8 @@ public class Poster extends BaseTimeEntity {
                 .content(content)
                 .pics(FileResponse)
                 .deadlineDate(deadlineDate.toString())
-//                .dday(period.getDays())
-                .dday(1)
+                .dday(period.getDays())
+//                .dday(1)
                 .createdTime(getCreatedTime().toString())
                 .modifiedTime(getModifiedTime().toString())
                 .build();

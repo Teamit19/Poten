@@ -75,7 +75,7 @@ public class PosterService {
     }
 
     public List<Poster> findPosterAll(){
-        List<Poster> findPostersFromRepo = posterRepository.findAll();
+        List<Poster> findPostersFromRepo = posterRepository.findAllByOrderByDeadlineDate();
         return findPostersFromRepo == null ? Collections.emptyList() : findPostersFromRepo;
     }
 
