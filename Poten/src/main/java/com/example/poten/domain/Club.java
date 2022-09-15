@@ -2,6 +2,7 @@ package com.example.poten.domain;
 
 import com.example.poten.dto.request.ClubForm;
 import com.example.poten.dto.response.ClubResponse;
+import com.example.poten.dto.response.FileResponse;
 import com.example.poten.dto.response.HeartClubResponse;
 import com.example.poten.dto.response.PosterResponse;
 import com.example.poten.dto.response.UserResponse;
@@ -39,14 +40,6 @@ public class Club extends BaseTimeEntity {
     private String field;
 
     private String activityType;
-
-    public void setProfile(List<FileEntity> profile) {
-        this.profile = profile;
-    }
-
-    public void setBackground(List<FileEntity> background) {
-        this.background = background;
-    }
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
@@ -103,6 +96,14 @@ public class Club extends BaseTimeEntity {
         this.waitings = new ArrayList<User>();
     }
 
+    public void setProfile(List<FileEntity> profile) {
+        this.profile = profile;
+    }
+
+    public void setBackground(List<FileEntity> background) {
+        this.background = background;
+    }
+
     /* Entity -> DTO */
     public ClubResponse toResponse() {
         // 리스트 형식인 필드를  DTO로 변환
@@ -121,6 +122,12 @@ public class Club extends BaseTimeEntity {
 //        List<UserResponse> waitingsResponses = new ArrayList<>();
 //        waitings.forEach(m -> waitingsResponses.add(m.toResponse()));
 
+        var fileResponse = new FileResponse();
+        if (! profile.isEmpty()) fileResponse = profile.get(0).toResponse();
+
+        var fileResponse2 = new FileResponse();
+        if (! background.isEmpty()) fileResponse2 = background.get(0).toResponse();
+
         return ClubResponse.builder()
                 .clubId(id)
                 .clubName(name)
@@ -137,6 +144,8 @@ public class Club extends BaseTimeEntity {
 //                .posters(postersResponses)
                 .members(membersResponses)
 //                .waitings(waitingsResponses)
+                .profile(fileResponse)
+                .background(fileResponse2)
                 .createdTime(getCreatedTime().toString())
                 .build();
     }

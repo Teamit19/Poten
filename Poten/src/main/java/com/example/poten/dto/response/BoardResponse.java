@@ -21,7 +21,8 @@ public class BoardResponse {
 
     private List<HeartBoardResponse> hearts;
     private List<CommentResponse> comment;
-    private FileResponse pics;  // <<TODO>>
+    private FileResponse pics;
+    private FileResponse background;
 
     private Integer heartsNum;
     private Integer commentsNum;

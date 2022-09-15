@@ -25,6 +25,9 @@ public class ClubResponse {
     private List<UserResponse> members;
     private List<UserResponse> waitings;
 
+    private FileResponse profile;
+    private FileResponse background;
+
     private Integer followersNum;
     private Integer heartsNum;
     private Integer membersNum;

@@ -74,8 +74,8 @@ public class Poster extends BaseTimeEntity {
             period = Period.between(now, deadlineDate.toLocalDate());
         }
 
-        var FileResponse = new FileResponse();
-        if (! posterImg.isEmpty()) FileResponse = posterImg.get(0).toResponse();
+        var fileResponse = new FileResponse();
+        if (! posterImg.isEmpty()) fileResponse = posterImg.get(0).toResponse();
 
         return PosterResponse.builder()
                 .posterId(id)
@@ -83,7 +83,7 @@ public class Poster extends BaseTimeEntity {
 //                .writer(user.toResponse())
                 .title(title)
                 .content(content)
-                .pics(FileResponse)
+                .posterImg(fileResponse)
                 .deadlineDate(deadlineDate.toString())
                 .dday(period.getDays())
 //                .dday(1)

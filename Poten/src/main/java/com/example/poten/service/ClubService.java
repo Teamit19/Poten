@@ -53,8 +53,13 @@ public class ClubService {
         Club saveClub = clubForm.toClub(user);
         saveClub.addMember(user);
 
+        // profile
         List<FileEntity> picsToFileEnity = fileService.parseFileInfo(clubForm.getProfile());    // FileEntity로 변환
         saveClub.setProfile(picsToFileEnity);
+
+        // background
+        List<FileEntity> backToFileEnity = fileService.parseFileInfo(clubForm.getBackground());    // FileEntity로 변환
+        saveClub.setBackground(backToFileEnity);
 
         clubRepository.save(saveClub);
 
