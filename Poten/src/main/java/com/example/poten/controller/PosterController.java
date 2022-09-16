@@ -120,7 +120,7 @@ public class PosterController {
         String keyword = keywordMap.get("keyword");
         List<PosterResponse> searchResult = posterService.searchPoster(keyword);
 
-        return ResponseEntity.ok(searchResult);
+        return ResponseEntity.ok(new PosterResponseList(searchResult));
     }
 
     @ApiOperation(value = "공고 수정")
