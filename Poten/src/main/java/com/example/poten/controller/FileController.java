@@ -9,6 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -37,6 +39,7 @@ public class FileController {
         log.error("Board Errors = {}", errors);
     }
 
+    @ApiOperation(value = "이미지 출력")
     @ResponseBody
     @GetMapping("/images/{filename}")
     public ResponseEntity<byte[]> getFile( @PathVariable String filename){
@@ -58,6 +61,7 @@ public class FileController {
         return result;
     }
 
+    @ApiOperation(value = "파일 다운로드")
     @GetMapping("/download/{filename}")
     public ResponseEntity<Resource> downloadAttach(@PathVariable String filename)
         throws MalformedURLException {

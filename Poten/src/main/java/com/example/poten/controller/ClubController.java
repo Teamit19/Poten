@@ -7,13 +7,10 @@ import com.example.poten.dto.request.ClubForm;
 import com.example.poten.service.ClubService;
 import com.example.poten.service.FileService;
 import com.example.poten.service.UserService;
-import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,59 +47,6 @@ public class ClubController {
         log.error("Club Errors = {}", errors);
     }
 
-
-//    @PostMapping("/test")
-//    @ResponseBody
-//    public Test sendTest(@ModelAttribute HashMap<String, String> param){
-//        Test t = new Test("test");
-//        System.out.println("test 완료" + param);
-//        return t;
-//    }
-
-
-    @ApiOperation(value = "안드로이드테스트")
-    @PostMapping("/test2")
-    public ResponseEntity<?> postTest(@ModelAttribute @Valid MultipartFile pics, TestDto testDto) throws Exception {
-        System.out.println("test 2 시작" + testDto.getContent() + testDto.getContent2() + pics);
-        List<FileEntity> picsToFileEnity = fileService.parseFileInfo(List.of(pics));
-        test = testDto;
-        if(! picsToFileEnity.isEmpty()) {
-            System.out.println("test 2 시작1" + picsToFileEnity.get(0).getOrgFileName());
-        } else {
-            System.out.println("test 2 시작1");
-        }
-        //testDto.setPic(uploadFile);
-//        List<FileEntity> picsToFileEnity = fileService.parseFileInfo(List.of(uploadFile));    // FileEntity로 변환
-//        test = testDto;
-//        if(! picsToFileEnity.isEmpty()) {
-//            System.out.println("test 2 시작1" + picsToFileEnity.get(0).getOrgFileName());
-//            test.addFile(picsToFileEnity);
-//        }
-        Test t = new Test("files/images/7bef56dd-40e7-4ad8-8767-587d2ac24625_test.png", "test2");
-        var fileUrl = "files/images/7bef56dd-40e7-4ad8-8767-587d2ac24625_test.png";
-
-        return ResponseEntity.ok(t);
-    }
-//    @ApiOperation(value = "안드로이드테스트")
-//    @PostMapping("/test2")
-//    public ResponseEntity postTest(@ModelAttribute @Valid TestDto testDto) throws Exception {
-//        System.out.println("test 2 시작" + testDto.getPics() + testDto.getContent());
-//        List<FileEntity> picsToFileEnity = fileService.parseFileInfo(testDto.getPics());    // FileEntity로 변환
-//        test = testDto;
-//        if(! picsToFileEnity.isEmpty()) {
-//            System.out.println("test 2 시작1" + picsToFileEnity.get(0).getOrgFileName());
-//            test.addFile(picsToFileEnity);
-//        }
-//        Test t = new Test("test");
-//        return ResponseEntity.ok(t);
-//    }
-
-    @ApiOperation(value = "안드로이드테스트")
-    @GetMapping("/test2")
-    public ResponseEntity getTest(){
-
-        return ResponseEntity.ok(test);
-    }
 
     @ApiOperation(value = "동아리 생성")
     @PostMapping("")
