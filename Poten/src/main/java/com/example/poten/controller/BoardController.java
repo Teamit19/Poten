@@ -60,7 +60,7 @@ public class BoardController {
     @PostMapping("/upload")
     public ResponseEntity<?> saveBoard(HttpServletRequest request, @ModelAttribute @Valid BoardForm boardForm, BindingResult bindingResult)
         throws Exception {
-        log.error("들어옴");
+        log.error("SAVEBOARD 들어옴 - content : " + boardForm.getContent());
 //        System.out.println("test 2 시작 pics" + pics);
         System.out.println("test 2 시작 boardForm" + boardForm.getPics().toString());
         if (bindingResult.hasErrors()) {
